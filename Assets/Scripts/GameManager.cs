@@ -6,23 +6,32 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Moving scene config")]
-    [SerializeField] private GameObject gameCamera;
+    [Header("Moving scene config")] [SerializeField]
+    private GameObject gameCamera;
+
     [SerializeField] private GameObject movingSceneObject;
     [SerializeField] private Transform cameraDefaultPosition;
     [SerializeField] private Transform cameraFallingPosition;
     [SerializeField] private float heightDamping = 1f;
     [SerializeField] public bool isSceneFollowingPlayerHeight = false;
 
-    [Header("Moving camera config")]
-    [SerializeField] private float transitionSpeed = 0.5f;
+    [Header("Moving camera config")] [SerializeField]
+    private float transitionSpeed = 0.5f;
+
     [SerializeField] public GameObject playerObject;
-    
-    [Header("Common config")]
-    [SerializeField] private Vector3 sceneDefaultPosition;
+
+    [Header("Common config")] [SerializeField]
+    private Vector3 sceneDefaultPosition;
+
     [SerializeField] private Vector3 sceneFallingOffset;
     [SerializeField] private bool isAnimationBeingMoved = false;
     public Animator currentPlayerAnimator;
+
+    [Header("Player Config")] [SerializeField]
+    private PlayerVelocityLimiter playerVelocityLimiter;
+
+    public float moveSpeed = 10f;
+    private static readonly int Rolling = Animator.StringToHash("Rolling");
 
     private void Start()
     {
@@ -52,6 +61,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CharacterAirControll()
+    {
+
+        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved)
+        {
+            
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                currentPlayerAnimator.SetTrigger(Rolling);
+            }
+            
+            float h = Input.GetAxis("Horizontal");
+            float v = Input.GetAxis("Vertical");
+
+            //var playerVelocityLimiterPos = playerVelocityLimiter.pelvisVelocitySampler.transform;
+            //playerVelocityLimiter.pelvisVelocitySampler.MovePosition(
+            //    playerVelocityLimiterPos.position + (playerVelocityLimiterPos.right * h + playerVelocityLimiterPos.up * v) * moveSpeed);
+            
+            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (moveSpeed * h));
+            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (moveSpeed * v));
+        }
+    }
+
     IEnumerator MoveCameraToTarget(Vector3 origin, Vector3 target, float duration)
     {
         isAnimationBeingMoved = true;
@@ -71,10 +103,12 @@ public class GameManager : MonoBehaviour
 
     public void CameraSmoothFollowPlayerHeight()
     {
-        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved && movingSceneObject.transform.position.y > playerObject.transform.position.y + sceneFallingOffset.y)
+        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved && movingSceneObject.transform.position.y >
+            playerObject.transform.position.y + sceneFallingOffset.y)
         {
             var position = movingSceneObject.transform.position;
-            var lerpedHeight = Mathf.Lerp(position.y, playerObject.transform.position.y + sceneFallingOffset.y, heightDamping * Time.deltaTime);
+            var lerpedHeight = Mathf.Lerp(position.y, playerObject.transform.position.y + sceneFallingOffset.y,
+                heightDamping * Time.deltaTime);
             position = new Vector3(position.x, lerpedHeight, position.z);
             movingSceneObject.transform.position = position;
         }
@@ -98,6 +132,7 @@ public class GameManager : MonoBehaviour
     {
         CameraLookAtPlayer();
         SceneReloadController();
+        CharacterAirControll();
     }
 
     private void FixedUpdate()
