@@ -15,6 +15,7 @@ public class PistonController : MonoBehaviour
     [SerializeField] private Vector3 velocity = Vector3.zero;
     public bool isPistonExtending = false;
     public bool isPistonActive = true;
+    public bool isThisPistonLast = false;
     
     void Start()
     {

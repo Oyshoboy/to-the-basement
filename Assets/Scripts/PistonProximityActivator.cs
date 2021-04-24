@@ -10,6 +10,7 @@ public class PistonProximityActivator : MonoBehaviour
     [SerializeField] private int previousPiston = 0;
     private bool isplayerObjectNotNull;
     [SerializeField] private bool isPistonButtonReleaseNeeded = false;
+    [SerializeField] private bool isLastPistonActivated;
 
     void Start()
     {
@@ -46,20 +47,32 @@ public class PistonProximityActivator : MonoBehaviour
             if (currentDistance < minDistance)
             {
                 minDistance = currentDistance;
-                closestPiston = i;
+                
+                // ONLY IF LAST PISTON WASN'T ACTIVATED
+                if (!isLastPistonActivated)
+                {
+                    closestPiston = i;
+                }
             }
         }
-    
+
         // DETECT IF PISTONS WAS SWITCHED
-        if (previousPiston != closestPiston )
+        if (previousPiston != closestPiston)
         {
             previousPiston = closestPiston;
             isPistonButtonReleaseNeeded = true;
         }
-        
+
         // CHECK IF BACKSPACE NEED TO BE RELEASED, TO AVOID AUTOMATIC EXTENTION IF BACKSPACE IS PRESSED AND HELD
         if (pistons[closestPiston].isPistonExtending && !isPistonButtonReleaseNeeded)
         {
+            // CHECK IF LAST PISTON WAS ACTIVATED
+            if (pistons[closestPiston].isThisPistonLast && !isLastPistonActivated)
+            {
+                isLastPistonActivated = true;
+            }
+            
+            // ACTIVATE NEAREST PISTON
             pistons[closestPiston].isPistonActive = true;
         }
         else if (isPistonButtonReleaseNeeded && !pistons[closestPiston].isPistonExtending)
