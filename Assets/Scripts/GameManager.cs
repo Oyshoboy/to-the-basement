@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Vector3 sceneFallingOffset;
     [SerializeField] private bool isAnimationBeingMoved = false;
     public Animator currentPlayerAnimator;
+    public bool isCameraFollowingTargetByX = false;
 
     [Header("Player Config")] [SerializeField]
     private PlayerVelocityLimiter playerVelocityLimiter;
@@ -143,7 +144,14 @@ public class GameManager : MonoBehaviour
             var position = movingSceneObject.transform.position;
             var lerpedHeight = Mathf.Lerp(position.y, playerObject.transform.position.y + sceneFallingOffset.y,
                 heightDamping * Time.deltaTime);
-            position = new Vector3(position.x, lerpedHeight, position.z);
+
+            var lerpedX = position.x;
+            if (isCameraFollowingTargetByX)
+            {
+                lerpedX = Mathf.Lerp(position.x, playerObject.transform.position.x + sceneFallingOffset.x,
+                    heightDamping * Time.deltaTime);
+            }
+            position = new Vector3(lerpedX, lerpedHeight, position.z);
             movingSceneObject.transform.position = position;
         }
     }

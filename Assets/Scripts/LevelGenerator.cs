@@ -10,6 +10,7 @@ public class LevelGenerator : MonoBehaviour
     [Header("Generator config")]
     [SerializeField] private int initialPoolSize = 5;
     [SerializeField] private float chunkHeight = 12f;
+    [SerializeField] private float chunkXOffset = 0f;
     private float lowestStaticLevelOffset;
     
     [SerializeField] private List<GameObject> tunnelChunksPool;
@@ -43,7 +44,7 @@ public class LevelGenerator : MonoBehaviour
     {
         var objectSpawned = Instantiate(tunnelChunksSpawnObjects[UnityEngine.Random.Range(0, tunnelChunksSpawnObjects.Length)]);
         objectSpawned.transform.parent = defaultChunkHide.transform.parent;
-        objectSpawned.transform.localPosition = new Vector3(0, -( chunkHeight * chunkIndex ), 0);
+        objectSpawned.transform.localPosition = new Vector3(chunkXOffset * chunkIndex, -( chunkHeight * chunkIndex ), 0);
         tunnelChunksPool.Add(objectSpawned);
     }
 
