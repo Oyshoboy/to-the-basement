@@ -34,7 +34,9 @@ public class GameManager : MonoBehaviour
     private static readonly int Rolling = Animator.StringToHash("Rolling");
     
     [Header("Player Rotation Controller")]
-    Vector3 m_EulerAngleVelocity = new Vector3(100, 0, 0);
+    Vector3 m_EulerAngleVelocity = new Vector3(0, 0, 100);
+
+    [SerializeField] private float torqueSpeed = 300;
     [SerializeField] private bool isFlipProcessing = false;
     private void Start()
     {
@@ -74,7 +76,11 @@ public class GameManager : MonoBehaviour
             {
                 isFlipProcessing = true;
                 currentPlayerAnimator.SetBool(Rolling, true);
-                StartCoroutine(CharacterFlipOne(1));
+                //StartCoroutine(CharacterFlipOne(1));
+            } else if (Input.GetKeyUp(KeyCode.Space) && isFlipProcessing)
+            {
+                currentPlayerAnimator.SetBool(Rolling, false);
+                isFlipProcessing = false;
             }
             
             
@@ -89,14 +95,23 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    
+    private void FlipController()
+    {
+        if (isFlipProcessing)
+        {
+            return;
+            Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * (Time.fixedDeltaTime * torqueSpeed));
+            playerVelocityLimiter.pelvisVelocitySampler.MoveRotation(playerVelocityLimiter.pelvisVelocitySampler.rotation * deltaRotation);
+        }
+    }
+    
     IEnumerator CharacterFlipOne(float duration)
     {
         float journey = 0f;
         while (journey <= duration)
         {
             journey = journey + Time.deltaTime;
-            Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * Time.fixedDeltaTime);
-            playerVelocityLimiter.pelvisVelocitySampler.MoveRotation(playerVelocityLimiter.pelvisVelocitySampler.rotation * deltaRotation);
             yield return null;
         }
         currentPlayerAnimator.SetBool(Rolling, false);
@@ -146,6 +161,7 @@ public class GameManager : MonoBehaviour
             transitionSpeed));
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -157,5 +173,6 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         CameraSmoothFollowPlayerHeight();
+        FlipController();
     }
 }
