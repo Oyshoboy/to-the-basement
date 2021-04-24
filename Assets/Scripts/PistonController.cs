@@ -5,7 +5,7 @@ using UnityEngine;
 public class PistonController : MonoBehaviour
 {
     [Header("Piston offsets")]
-    [Range(0.1f, 1f)]
+    [Range(0.1f, 5f)]
     public float maxExtension;
     [SerializeField] private GameObject pistonTargetPoint;
 

@@ -1,18 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RagdollActivator : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (other.name == "Player")
+        {
+            var playerRootManager = other.GetComponent<PlayerRootManager>();
+            if (playerRootManager)
+            {
+                if (!playerRootManager.isRagdollToggled)
+                {
+                    playerRootManager.ToggleRagdoll();
+                    playerRootManager.isRagdollToggled = true;
+                }
+            }
+        }
     }
 }
