@@ -2206,6 +2206,7 @@ MonoBehaviour:
   previousPiston: 0
   isPistonButtonReleaseNeeded: 0
   isLastPistonActivated: 0
+  gameManager: {fileID: 89763955}
 --- !u!4 &89763954
 Transform:
   m_ObjectHideFlags: 0
@@ -2234,16 +2235,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameCamera: {fileID: 963194225}
   movingSceneObject: {fileID: 1087257688}
+  cameraStartPosition: {fileID: 0}
   cameraDefaultPosition: {fileID: 1853885292}
   cameraFallingPosition: {fileID: 813139696}
   heightDamping: 15
-  isSceneFollowingPlayerHeight: 0
+  isSceneFollowingPlayerHeightRightNow: 0
   transitionSpeed: 1
   playerObject: {fileID: 0}
   sceneDefaultPosition: {x: 0, y: 0, z: 0}
+  isGameOnBeginning: 0
   sceneFallingOffset: {x: 0, y: -4, z: 0}
   isAnimationBeingMoved: 0
   currentPlayerAnimator: {fileID: 1494831837}
+  isCameraFollowingTargetByX: 0
+  sofa: {fileID: 0}
   playerVelocityLimiter: {fileID: 1143623159}
   moveSpeed: 1000
   torqueSpeed: -30
@@ -20887,6 +20892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialPoolSize: 5
   chunkHeight: 12
+  chunkXOffset: 0
   tunnelChunksPool: []
   sceneStartPosition: {x: 0, y: 0, z: 0}
   lastChunkIterationPlaced: 1

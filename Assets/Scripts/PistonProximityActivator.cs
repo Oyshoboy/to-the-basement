@@ -11,7 +11,8 @@ public class PistonProximityActivator : MonoBehaviour
     private bool isplayerObjectNotNull;
     [SerializeField] private bool isPistonButtonReleaseNeeded = false;
     [SerializeField] private bool isLastPistonActivated;
-
+    [SerializeField] private GameManager gameManager;
+    
     void Start()
     {
         InitRefferences();
@@ -21,7 +22,10 @@ public class PistonProximityActivator : MonoBehaviour
     {
         if (isplayerObjectNotNull && pistons.Length > 0)
         {
-            pistonsProximityController();
+            if (!gameManager.isGameOnBeginning)
+            {
+                pistonsProximityController();
+            }
         }
         else
         {

@@ -8,12 +8,12 @@ public class GameManager : MonoBehaviour
 {
     [Header("Moving scene config")] [SerializeField]
     private GameObject gameCamera;
-
     [SerializeField] private GameObject movingSceneObject;
+    [SerializeField] private Transform cameraStartPosition;
     [SerializeField] private Transform cameraDefaultPosition;
     [SerializeField] private Transform cameraFallingPosition;
     [SerializeField] private float heightDamping = 1f;
-    [SerializeField] public bool isSceneFollowingPlayerHeight = false;
+    [SerializeField] public bool isSceneFollowingPlayerHeightRightNow = false;
 
     [Header("Moving camera config")] [SerializeField]
     private float transitionSpeed = 0.5f;
@@ -22,11 +22,13 @@ public class GameManager : MonoBehaviour
 
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
+    public bool isGameOnBeginning = true;
 
     [SerializeField] private Vector3 sceneFallingOffset;
     [SerializeField] private bool isAnimationBeingMoved = false;
     public Animator currentPlayerAnimator;
     public bool isCameraFollowingTargetByX = false;
+    public GameObject sofa;
 
     [Header("Player Config")] [SerializeField]
     private PlayerVelocityLimiter playerVelocityLimiter;
@@ -39,16 +41,28 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private float torqueSpeed = 300;
     [SerializeField] private bool isFlipProcessing = false;
+    
     private void Start()
     {
         sceneDefaultPosition = movingSceneObject.transform.position;
         playerObject = GameObject.FindWithTag("Player");
         if (Camera.main != null) gameCamera = Camera.main.gameObject;
+        SetupPlayerAndStuffForGame();
+    }
+
+    private void SetupPlayerAndStuffForGame()
+    {
+        sofa.GetComponent<Rigidbody>().isKinematic = false;
+        playerVelocityLimiter.gameObject.GetComponent<PlayerRootManager>().playerPuppetMaster.pinWeight = 0;
     }
 
     private void CameraLookAtPlayer()
     {
-        if (isSceneFollowingPlayerHeight)
+        if (isGameOnBeginning)
+        {
+            return;
+        }
+        if (isSceneFollowingPlayerHeightRightNow)
         {
             gameCamera.transform.LookAt(playerObject.transform);
         }
@@ -70,7 +84,7 @@ public class GameManager : MonoBehaviour
     private void CharacterAirControll()
     {
 
-        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved)
+        if (isSceneFollowingPlayerHeightRightNow && !isAnimationBeingMoved)
         {
             
             if (Input.GetKeyDown(KeyCode.Space) && !isFlipProcessing)
@@ -119,7 +133,7 @@ public class GameManager : MonoBehaviour
         isFlipProcessing = false;
     }
 
-    IEnumerator MoveCameraToTarget(Vector3 origin, Vector3 target, float duration)
+    IEnumerator MoveCameraToTarget(Transform origin, Transform target, float duration)
     {
         isAnimationBeingMoved = true;
         float journey = 0f;
@@ -128,9 +142,15 @@ public class GameManager : MonoBehaviour
             journey = journey + Time.deltaTime;
             float percent = Mathf.Clamp01(journey / duration);
 
-            gameCamera.transform.localPosition = Vector3.Lerp(origin, target, percent);
+            gameCamera.transform.localPosition = Vector3.Lerp(origin.localPosition, target.localPosition, percent);
+            gameCamera.transform.localRotation = Quaternion.Lerp(origin.localRotation, target.localRotation, percent);
 
             yield return null;
+        }
+
+        if (isGameOnBeginning)
+        {
+            isGameOnBeginning = false;
         }
 
         isAnimationBeingMoved = false;
@@ -138,7 +158,7 @@ public class GameManager : MonoBehaviour
 
     public void CameraSmoothFollowPlayerHeight()
     {
-        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved && movingSceneObject.transform.position.y >
+        if (isSceneFollowingPlayerHeightRightNow && !isAnimationBeingMoved && movingSceneObject.transform.position.y >
             playerObject.transform.position.y + sceneFallingOffset.y)
         {
             var position = movingSceneObject.transform.position;
@@ -158,15 +178,34 @@ public class GameManager : MonoBehaviour
 
     public void MoveCameraToFallingMode()
     {
-        isSceneFollowingPlayerHeight = true;
-        StartCoroutine(MoveCameraToTarget(gameCamera.transform.localPosition, cameraFallingPosition.localPosition,
+        isSceneFollowingPlayerHeightRightNow = true;
+        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraFallingPosition,
             transitionSpeed));
     }
 
     public void MoveCameraToDefaultMode()
     {
-        StartCoroutine(MoveCameraToTarget(gameCamera.transform.localPosition, cameraDefaultPosition.localPosition,
+        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraDefaultPosition,
             transitionSpeed));
+    }
+    
+    public void MoveCameraToStartMode()
+    {
+        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraStartPosition,
+            transitionSpeed));
+    }
+
+    private void FirstSpaceController()
+    {
+        if (isGameOnBeginning && !isAnimationBeingMoved)
+        {
+            if (Input.GetKeyDown("space"))
+            {
+                //SetupPlayerAndStuffForGame();
+                MoveCameraToDefaultMode();
+
+            }
+        }
     }
 
 
@@ -175,6 +214,7 @@ public class GameManager : MonoBehaviour
     {
         CameraLookAtPlayer();
         SceneReloadController();
+        FirstSpaceController();
         CharacterAirControll();
     }
 
