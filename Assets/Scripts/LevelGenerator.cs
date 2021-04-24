@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using RayFire;
 using UnityEngine;
 using Random = System.Random;
 
@@ -32,13 +33,18 @@ public class LevelGenerator : MonoBehaviour
         defaultChunkHide.SetActive(false);
         for (int i = 0; i < initialPoolSize; i++)
         {
-            var objectSpawned = Instantiate(tunnelChunksSpawnObjects[UnityEngine.Random.Range(0, tunnelChunksSpawnObjects.Length)]);
-            objectSpawned.transform.parent = defaultChunkHide.transform.parent;
-            objectSpawned.transform.localPosition = new Vector3(0, -( chunkHeight * i ), 0);
-            tunnelChunksPool.Add(objectSpawned);
+            GenerateNewTunnelChunk(i);
         }
         sceneStartPosition = transform.position;
         lowestStaticLevelOffset -= ( tunnelChunksPool.Count - 1 ) * chunkHeight;
+    }
+
+    public void GenerateNewTunnelChunk(int chunkIndex)
+    {
+        var objectSpawned = Instantiate(tunnelChunksSpawnObjects[UnityEngine.Random.Range(0, tunnelChunksSpawnObjects.Length)]);
+        objectSpawned.transform.parent = defaultChunkHide.transform.parent;
+        objectSpawned.transform.localPosition = new Vector3(0, -( chunkHeight * chunkIndex ), 0);
+        tunnelChunksPool.Add(objectSpawned);
     }
 
     private void TunnelChunksDepthPlacement()
@@ -48,17 +54,27 @@ public class LevelGenerator : MonoBehaviour
 
         if (heightDifferenceSingle > lastChunkIterationPlaced)
         {
-            Debug.Log("REPLACE CHUNKS!");
             lastChunkIterationPlaced = heightDifferenceSingle;
+            Debug.Log("REPLACE CHUNKS!");
             lowestStaticLevelOffset -= chunkHeight;
-            tunnelChunksPool[chunksSwitchIndes].transform.position = new Vector3(tunnelChunksPool[chunksSwitchIndes].transform.position.x, lowestStaticLevelOffset, tunnelChunksPool[chunksSwitchIndes].transform.position.z);
+            
+            // THIS ONE IS FOR GENERATION
+            Destroy(tunnelChunksPool[0]);
+            tunnelChunksPool.RemoveAt(0);
+            GenerateNewTunnelChunk(initialPoolSize + chunksSwitchIndes);
             chunksSwitchIndes++;
-
+            
+            //tunnelChunksPool[chunksSwitchIndes].transform.position = new Vector3(tunnelChunksPool[chunksSwitchIndes].transform.position.x, lowestStaticLevelOffset, tunnelChunksPool[chunksSwitchIndes].transform.position.z);
+            //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.ResetRigid();
+            //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.simulationType = SimType.Kinematic;
+            
+            //chunksSwitchIndes++;
+            
             // RESET CHUNKS INDEX
-            if (chunksSwitchIndes == tunnelChunksPool.Count)
-            {
-                chunksSwitchIndes = 0;
-            }
+            // if (chunksSwitchIndes == tunnelChunksPool.Count)
+            // {
+            //     chunksSwitchIndes = 0;
+            // }
         }
     }
     

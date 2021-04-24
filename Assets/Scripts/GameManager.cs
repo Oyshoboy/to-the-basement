@@ -31,6 +31,18 @@ public class GameManager : MonoBehaviour
         if (Camera.main != null) gameCamera = Camera.main.gameObject;
     }
 
+    private void CameraLookAtPlayer()
+    {
+        if (isSceneFollowingPlayerHeight)
+        {
+            gameCamera.transform.LookAt(playerObject.transform);
+        }
+        else
+        {
+            gameCamera.transform.localEulerAngles = Vector3.zero;
+        }
+    }
+
     private void SceneReloadController()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -84,6 +96,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CameraLookAtPlayer();
         SceneReloadController();
     }
 

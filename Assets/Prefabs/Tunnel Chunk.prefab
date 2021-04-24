@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6818768597698498364}
+  - component: {fileID: 7326685839276222402}
   m_Layer: 0
   m_Name: Tunnel Chunk
   m_TagString: Untagged
@@ -34,6 +35,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7326685839276222402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6818768597698498367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c48cc5941d67df4cb50a31559ff1808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayfireRigid: {fileID: 6818768598668716609}
 --- !u!1 &6818768597892606247
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +230,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818768598341380530}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5393763, y: 1.3513768, z: -3.7491813}
+  m_LocalPosition: {x: 0.22, y: -0.32, z: 0.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6818768598668716608}
@@ -410,8 +424,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818768598668716612}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.7529, y: -1.6713767, z: 3.6239}
-  m_LocalScale: {x: 5.507313, y: 0.29787594, z: 2.9618309}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1015}
+  m_LocalScale: {x: 5.778554, y: 0.29787594, z: 3.0243063}
   m_Children: []
   m_Father: {fileID: 6818768598341380531}
   m_RootOrder: 0
@@ -490,10 +504,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb6e52f37bca2404fac00b69fd8d21f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialization: 1
+  initialization: 0
   simulationType: 3
   objectType: 0
-  demolitionType: 1
+  demolitionType: 2
   physics:
     materialType: 2
     material: {fileID: 0}
@@ -519,7 +533,7 @@ MonoBehaviour:
     unyielding: 0
     activatable: 0
   limitations:
-    solidity: 0
+    solidity: 0.1
     depth: 1
     time: 0.2
     size: 0.1
@@ -614,11 +628,11 @@ MonoBehaviour:
     enable: 0
     maxDamage: 100
     currentDamage: 0
-    collect: 0
+    collect: 1
     multiplier: 1
   fading:
     onDemolition: 1
-    onActivation: 1
+    onActivation: 0
     lifeType: 4
     lifeTime: 0.3
     lifeVariation: 0.3
@@ -631,7 +645,7 @@ MonoBehaviour:
     action: 0
     destroyDelay: 1
     mesh: 4
-    fragments: 0
+    fragments: 2
     shards: 0
   initialized: 0
   meshes: []
@@ -1398,7 +1412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012421277066, guid: 32b8c252e7144d242bd93e3e280fda74, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.81
+      value: -2.41
       objectReference: {fileID: 0}
     - target: {fileID: 4000012421277066, guid: 32b8c252e7144d242bd93e3e280fda74, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1554,7 +1568,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012421277066, guid: 32b8c252e7144d242bd93e3e280fda74, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.65
+      value: 1.24
       objectReference: {fileID: 0}
     - target: {fileID: 4000012421277066, guid: 32b8c252e7144d242bd93e3e280fda74, type: 3}
       propertyPath: m_LocalRotation.w
