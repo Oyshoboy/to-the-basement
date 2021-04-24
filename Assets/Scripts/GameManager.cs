@@ -1,26 +1,94 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Moving scene config")]
+    [SerializeField] private GameObject gameCamera;
+    [SerializeField] private GameObject movingSceneObject;
+    [SerializeField] private Transform cameraDefaultPosition;
+    [SerializeField] private Transform cameraFallingPosition;
+    [SerializeField] private float heightDamping = 1f;
+    [SerializeField] public bool isSceneFollowingPlayerHeight = false;
+
+    [Header("Moving camera config")]
+    [SerializeField] private float transitionSpeed = 0.5f;
+    [SerializeField] public GameObject playerObject;
+    
+    [Header("Common config")]
+    [SerializeField] private Vector3 sceneDefaultPosition;
+    [SerializeField] private Vector3 sceneFallingOffset;
+    [SerializeField] private bool isAnimationBeingMoved = false;
+    public Animator currentPlayerAnimator;
+
+    private void Start()
     {
-        
+        sceneDefaultPosition = movingSceneObject.transform.position;
+        playerObject = GameObject.FindWithTag("Player");
+        if (Camera.main != null) gameCamera = Camera.main.gameObject;
     }
 
     private void SceneReloadController()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Scene scene = SceneManager. GetActiveScene();
-            SceneManager. LoadScene(scene.name);
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
         }
     }
-        
+
+    IEnumerator MoveCameraToTarget(Vector3 origin, Vector3 target, float duration)
+    {
+        isAnimationBeingMoved = true;
+        float journey = 0f;
+        while (journey <= duration)
+        {
+            journey = journey + Time.deltaTime;
+            float percent = Mathf.Clamp01(journey / duration);
+
+            gameCamera.transform.localPosition = Vector3.Lerp(origin, target, percent);
+
+            yield return null;
+        }
+
+        isAnimationBeingMoved = false;
+    }
+
+    public void CameraSmoothFollowPlayerHeight()
+    {
+        if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved && movingSceneObject.transform.position.y > playerObject.transform.position.y + sceneFallingOffset.y)
+        {
+            var position = movingSceneObject.transform.position;
+            var lerpedHeight = Mathf.Lerp(position.y, playerObject.transform.position.y + sceneFallingOffset.y, heightDamping * Time.deltaTime);
+            position = new Vector3(position.x, lerpedHeight, position.z);
+            movingSceneObject.transform.position = position;
+        }
+    }
+
+    public void MoveCameraToFallingMode()
+    {
+        isSceneFollowingPlayerHeight = true;
+        StartCoroutine(MoveCameraToTarget(gameCamera.transform.localPosition, cameraFallingPosition.localPosition,
+            transitionSpeed));
+    }
+
+    public void MoveCameraToDefaultMode()
+    {
+        StartCoroutine(MoveCameraToTarget(gameCamera.transform.localPosition, cameraDefaultPosition.localPosition,
+            transitionSpeed));
+    }
+
     // Update is called once per frame
     void Update()
     {
         SceneReloadController();
+    }
+
+    private void FixedUpdate()
+    {
+        CameraSmoothFollowPlayerHeight();
     }
 }
