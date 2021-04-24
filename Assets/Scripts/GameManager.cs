@@ -32,7 +32,10 @@ public class GameManager : MonoBehaviour
 
     public float moveSpeed = 10f;
     private static readonly int Rolling = Animator.StringToHash("Rolling");
-
+    
+    [Header("Player Rotation Controller")]
+    Vector3 m_EulerAngleVelocity = new Vector3(100, 0, 0);
+    [SerializeField] private bool isFlipProcessing = false;
     private void Start()
     {
         sceneDefaultPosition = movingSceneObject.transform.position;
@@ -67,10 +70,13 @@ public class GameManager : MonoBehaviour
         if (isSceneFollowingPlayerHeight && !isAnimationBeingMoved)
         {
             
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !isFlipProcessing)
             {
-                currentPlayerAnimator.SetTrigger(Rolling);
+                isFlipProcessing = true;
+                currentPlayerAnimator.SetBool(Rolling, true);
+                StartCoroutine(CharacterFlipOne(1));
             }
+            
             
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
@@ -78,10 +84,23 @@ public class GameManager : MonoBehaviour
             //var playerVelocityLimiterPos = playerVelocityLimiter.pelvisVelocitySampler.transform;
             //playerVelocityLimiter.pelvisVelocitySampler.MovePosition(
             //    playerVelocityLimiterPos.position + (playerVelocityLimiterPos.right * h + playerVelocityLimiterPos.up * v) * moveSpeed);
-            
-            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (moveSpeed * h));
-            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (moveSpeed * v));
+            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (moveSpeed * Time.deltaTime * h));
+            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (moveSpeed * Time.deltaTime * v));
         }
+    }
+    
+    IEnumerator CharacterFlipOne(float duration)
+    {
+        float journey = 0f;
+        while (journey <= duration)
+        {
+            journey = journey + Time.deltaTime;
+            Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * Time.fixedDeltaTime);
+            playerVelocityLimiter.pelvisVelocitySampler.MoveRotation(playerVelocityLimiter.pelvisVelocitySampler.rotation * deltaRotation);
+            yield return null;
+        }
+        currentPlayerAnimator.SetBool(Rolling, false);
+        isFlipProcessing = false;
     }
 
     IEnumerator MoveCameraToTarget(Vector3 origin, Vector3 target, float duration)
