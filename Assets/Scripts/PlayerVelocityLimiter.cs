@@ -10,7 +10,7 @@ public class PlayerVelocityLimiter : MonoBehaviour
     [Range(0.1f, 0.99f)]
     public float velocitySmoother = 0.95f;
     public float pelvisMaxVelocity = 400f;
-    [SerializeField] private float currentVelocity = 0;
+    public float currentVelocity = 0;
 
     [Header("Rest Rigidbodies")]
     [SerializeField]

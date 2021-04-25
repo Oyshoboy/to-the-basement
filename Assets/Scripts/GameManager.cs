@@ -1,6 +1,5 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -30,7 +29,10 @@ public class GameManager : MonoBehaviour
     public bool isCameraNeedToFollowTargetByX = false;
     public UnityEvent InitEvent;
 
-
+    [Header("Fadeout Config")]
+    public DOTweenAnimation doTweenAnimation;
+    public bool isRestartRequested = false;
+    
     [Header("Moving scene config")] [SerializeField]
     private GameObject gameCamera;
 
@@ -119,7 +121,16 @@ public class GameManager : MonoBehaviour
 
     private void SceneReloadController()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !isRestartRequested)
+        {
+            isRestartRequested = true;
+            doTweenAnimation.DOPlayBackwards();
+        }
+    }
+
+    public void RestartLevel()
+    {
+        if (isRestartRequested)
         {
             Scene scene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(scene.name);
@@ -211,6 +222,8 @@ public class GameManager : MonoBehaviour
 
     public void MoveCameraToStairsMode()
     {
+        gameState = GameState.Falling;
+        objectLocalPositionManager.ToggleUiMovement();
         currentPlayerAnimator.SetTrigger("Falling");
         isSceneFollowingPlayerHeightRightNow = true;
         objectLocalPositionManager.SetNewDestination(2);

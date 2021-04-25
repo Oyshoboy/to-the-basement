@@ -21,6 +21,7 @@ public class LevelGenerator : MonoBehaviour
 
     public GameObject[] tunnelChunksSpawnObjects;
     public GameObject defaultChunkHide;
+    public GameObject levelBaseToHide;
 
     private int chunksSwitchIndes = 0;
 
@@ -70,7 +71,7 @@ public class LevelGenerator : MonoBehaviour
             tunnelChunksPool.RemoveAt(0);
             GenerateNewTunnelChunk(initialPoolSize + chunksSwitchIndes);
             chunksSwitchIndes++;
-
+            levelBaseToHide.SetActive(false);
             //PoolingChunksSwap();
         }
     }

@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RootMotion.Dynamics;
+using UnityEditor.Build.Player;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerSkills
@@ -13,8 +16,11 @@ public class PlayerSkills
     public float controlForce = 1000f;
     public float wallsSolidity = 0.3f;
 }
+
 public class GameArcadeManager : MonoBehaviour
 {
+    [Header("UI Stuff")] public TextMesh[] uiTexts;
+
     [Header("Economics")]
     public int gasPerNPCCollision = 10;
     public int coinPrice = 100;
@@ -36,6 +42,7 @@ public class GameArcadeManager : MonoBehaviour
 
     [Header("Refferences")] 
     public GameManager gameManager;
+    public PlayerBonusCollector bonusCollector;
     public GameObject playerPhysicsRoot;
     public PlayerVelocityLimiter playerVelocityLimiter;
     public PuppetMaster playerPuppetMaster;
@@ -60,6 +67,29 @@ public class GameArcadeManager : MonoBehaviour
             IncreaseGas(-((playerTotalDistanceTraveled - maxDistanceTraveled) * playerDefaultSkills.mpg));
             maxDistanceTraveled = playerTotalDistanceTraveled;
         }
+    }
+
+    private string FloatToThreeDigitText(float value)
+    {
+        if (value < 100 && value > 9)
+        {
+            return $"0{Mathf.Floor(value)}";
+        } else if (value < 100 && value < 10)
+        {
+            return $"00{Mathf.Floor(value)}";
+        }
+        else
+        {
+            return $"{Mathf.Floor(value)}";
+        }
+    }
+
+    private void UIDynamicUpdate()
+    {
+        uiTexts[0].text = $"x {FloatToThreeDigitText (bonusCollector.moneyCollected * coinPrice )}";
+        uiTexts[1].text = $"{FloatToThreeDigitText (playerVelocityLimiter.currentVelocity)}km/h";
+        uiTexts[2].text = $"x {FloatToThreeDigitText (bonusCollector.npcCollided)}";
+        uiTexts[3].text = $"{FloatToThreeDigitText (maxDistanceTraveled)}m";
     }
 
     private void IncreaseGas(float decreaseFactor)
@@ -128,5 +158,6 @@ public class GameArcadeManager : MonoBehaviour
     {
         TotalDistanceTraveledTracker();
         PlayerOverallModifController();
+        UIDynamicUpdate();
     }
 }
