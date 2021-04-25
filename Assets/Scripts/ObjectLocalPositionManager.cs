@@ -36,6 +36,7 @@ public class ObjectLocalPositionManager : MonoBehaviour
     
     private void MoveUiToPosition()
     {
+        if(!uIObject) return;
         if (timeElapsedForUi < timeToMoveUi)
         {
             var percent = timeElapsedForUi / timeToMoveUi;
@@ -53,6 +54,7 @@ public class ObjectLocalPositionManager : MonoBehaviour
     
     private void InitUiObject()
     {
+        if(!uIObject) return;
         timeElapsedForUi = float.MaxValue;
         uiStartPost = uIObject.transform.localPosition;
         uiStartRot = uIObject.transform.localRotation;

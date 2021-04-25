@@ -50,6 +50,8 @@ public class LevelGenerator : MonoBehaviour
         objectSpawned.transform.parent = defaultChunkHide.transform.parent;
         objectSpawned.transform.localPosition = new Vector3(chunkXOffset * chunkIndex, -( chunkHeight * chunkIndex ), 0);
         tunnelChunksPool.Add(objectSpawned);
+        
+        if(!levelObjectsSpawner) return;
         for (int i = 0; i < objectSpawned.GetComponent<StairChunkObjectSpawner>().spawnLines.Length; i++)
         {
             levelObjectsSpawner.queueToSpawn.Add(objectSpawned.GetComponent<StairChunkObjectSpawner>().spawnLines[i]);
