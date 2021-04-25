@@ -8,18 +8,20 @@ public class GameArcadeManager : MonoBehaviour
     [Header("Arcade Parameters")]
     public float gameSkillOverallModif = 1f;
     public float gameExhaustSpeed = 0.1f;
+    public float gameExhaustByTime = 0.85f;
     
     public float playerControlsForce = 1000f;
-    public float fallingHelperPushForce = 1000f;
-    public float playerMaxVelocity = 100f;
     float playerVlocitySmoother = 0.95f;
     
-    public float wallsMaxSolidity = 0.55f;
-    // GAS IS EXHAUSTING EACH METER TRAVELED
-    public float playerGas = 100;
-    public float mpgModificator = 1;
     public float gasPushForcePower;
     public float playerTotalDistanceTraveled;
+    
+    [Header("Player skills")]
+    public float playerMaxVelocity = 100f;
+    public float playerGas = 100;
+    public float mpgModificator = 1;
+    public float fallingHelperPushForce = 1000f;
+    public float wallsMaxSolidity = 0.55f;
 
     [Header("Refferences")] 
     public GameManager gameManager;
@@ -56,6 +58,11 @@ public class GameArcadeManager : MonoBehaviour
 
     private void PlayerOverallModifController()
     {
+        if (gameManager.gameState == GameManager.GameState.Falling)
+        {
+            playerGas -= Time.deltaTime * gameExhaustByTime;
+        }
+
         if (playerGas <= 0)
         {
             gameSkillOverallModif -= Time.deltaTime * gameExhaustSpeed;
@@ -64,8 +71,9 @@ public class GameArcadeManager : MonoBehaviour
             {
                 gameSkillOverallModif = 0;
             }
-
+            
             PlayerExhaust();
+            playerGas = 0;
         }
     }
 
@@ -93,14 +101,14 @@ public class GameArcadeManager : MonoBehaviour
         if (playerVelocityLimiter.pelvisMaxVelocity <= 0)
         {
             playerVelocityLimiter.pelvisMaxVelocity = 0;
-            playerVelocityLimiter.velocitySmoother = playerVlocitySmoother * 0.9f;
+            playerVelocityLimiter.velocitySmoother = playerVlocitySmoother * 0.95f;
             playerPuppetMaster.state = PuppetMaster.State.Dead;
         }
         
         if (playerVelocityLimiter.restMaxVelocity <= 0)
         {
             playerVelocityLimiter.restMaxVelocity = 0;
-            playerVelocityLimiter.restVelocitySmoother = playerVlocitySmoother * 0.9f;
+            playerVelocityLimiter.restVelocitySmoother = playerVlocitySmoother * 0.95f;
         }
     }
 

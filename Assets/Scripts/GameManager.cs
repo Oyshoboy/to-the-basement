@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
 {
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
-
     public enum GameState
     {
         Beginning,
@@ -17,7 +16,7 @@ public class GameManager : MonoBehaviour
         Falling,
         End
     };
-    
+
     public enum GameControlls
     {
         Depth,
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Moving scene config")] [SerializeField]
     private GameObject gameCamera;
+
     [SerializeField] private GameObject movingSceneObject;
     [SerializeField] private float heightDamping = 1f;
     [SerializeField] public bool isSceneFollowingPlayerHeightRightNow = false;
@@ -41,22 +41,23 @@ public class GameManager : MonoBehaviour
 
     [Header("Moving camera config")] [SerializeField]
     private ObjectLocalPositionManager objectLocalPositionManager;
+
     [SerializeField] public GameObject playerObject;
 
     [Header("Player Config")] [SerializeField]
     private PlayerVelocityLimiter playerVelocityLimiter;
+
     public Animator currentPlayerAnimator;
     public float playerMovementSpeed = 10f;
     private static readonly int Rolling = Animator.StringToHash("Rolling");
     public float fallingHelperPushForce = 100f;
 
-    [Header("Player Rotation Controller")]
-    Vector3 m_EulerAngleVelocity = new Vector3(0, 0, 100);
+    [Header("Player Rotation Controller")] Vector3 m_EulerAngleVelocity = new Vector3(0, 0, 100);
     [SerializeField] private float torqueSpeed = 300;
     [SerializeField] private bool isFlipProcessing = false;
 
-    [Header("Scene preparations")]
-    [SerializeField] private Rigidbody[] objectsToDisableKinematics;
+    [Header("Scene preparations")] [SerializeField]
+    private Rigidbody[] objectsToDisableKinematics;
 
     private void Start()
     {
@@ -92,7 +93,7 @@ public class GameManager : MonoBehaviour
                 objectsToDisableKinematics[i].collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             }
         }
-        
+
         playerVelocityLimiter.gameObject.GetComponent<PlayerRootManager>().playerPuppetMaster.pinWeight = 0;
     }
 
@@ -145,23 +146,14 @@ public class GameManager : MonoBehaviour
             float v = Input.GetAxis("Vertical");
             if (gameControls == GameControlls.Depth)
             {
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce( transform.right * (playerMovementSpeed * Time.deltaTime * h));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (playerMovementSpeed * Time.deltaTime * h));
                 playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (playerMovementSpeed * Time.deltaTime * v));
-            } else if (gameControls == GameControlls.Stairs)
+            }
+            else if (gameControls == GameControlls.Stairs)
             {
-                if (fallingHelperPushForce != 0)
-                {
-                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                        transform.right * (fallingHelperPushForce * Time.deltaTime * 1));
-                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                        transform.up * (fallingHelperPushForce / 4 * Time.deltaTime * -1));
-                }
-
-                if (playerMovementSpeed != null)
-                {
-                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                        transform.forward * (playerMovementSpeed * Time.deltaTime * v));
-                }
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (fallingHelperPushForce * Time.deltaTime * 1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.up * (fallingHelperPushForce / 4 * Time.deltaTime * -1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (playerMovementSpeed * Time.deltaTime * v));
             }
         }
     }
@@ -202,7 +194,8 @@ public class GameManager : MonoBehaviour
             if (movingSceneObject.transform.position.y > playerObject.transform.position.y + sceneFallingOffset.y)
             {
                 SceneFollowTargetXY();
-            } else if (!isWaitingForHeightOffset)
+            }
+            else if (!isWaitingForHeightOffset)
             {
                 SceneFollowTargetXY();
             }
