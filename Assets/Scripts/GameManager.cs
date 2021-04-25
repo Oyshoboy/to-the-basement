@@ -64,7 +64,9 @@ public class GameManager : MonoBehaviour
         }
         if (isSceneFollowingPlayerHeightRightNow)
         {
-            gameCamera.transform.LookAt(playerObject.transform);
+            var targetRotation = Quaternion.LookRotation(playerObject.transform.position - gameCamera.transform.position);
+            gameCamera.transform.rotation = Quaternion.Slerp(gameCamera.transform.rotation, targetRotation, 9 * Time.deltaTime);
+            //gameCamera.transform.LookAt(playerObject.transform);
         }
         else
         {

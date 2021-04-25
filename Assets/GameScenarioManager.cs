@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameScenarioManager : MonoBehaviour
 {
+    public GameObject sofa;
     // Start is called before the first frame update
     void Start()
     {
