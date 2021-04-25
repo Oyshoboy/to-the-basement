@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerBonusCollector : MonoBehaviour
 {
+    public GameArcadeManager gameArcadeManager;
     public int moneyCollected = 0;
     public int npcCollided = 0;
     public Transform playerHips;

@@ -2366,17 +2366,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45be1b8001336824bb7036b0a5b1db7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gasPerNPCCollision: 10
+  coinPrice: 100
   gameSkillOverallModif: 1
   gameExhaustSpeed: 0.1
   gameExhaustByTime: 0.85
-  playerControlsForce: 1000
+  playerGas: 100
   gasPushForcePower: 0
   playerTotalDistanceTraveled: 0
-  playerMaxVelocity: 150
-  playerGas: 100
-  mpgModificator: 1
-  fallingHelperPushForce: 200
-  wallsMaxSolidity: 0.55
+  playerMaxSkills:
+    velocity: 400
+    mpg: 0.1
+    fallingPushForce: 800
+    controlForce: 3000
+    wallsSolidity: 0.01
+  playerDefaultSkills:
+    velocity: 100
+    mpg: 1
+    fallingPushForce: 200
+    controlForce: 1000
+    wallsSolidity: 0.5
+  playerSkillLevel: 0
+  playerMaxSkillLevel: 100
   gameManager: {fileID: 89763955}
   playerPhysicsRoot: {fileID: 1998322388}
   playerVelocityLimiter: {fileID: 1143623159}
@@ -37192,6 +37203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1117936a5674a24387829958b0184d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameArcadeManager: {fileID: 0}
+  moneyCollected: 0
+  npcCollided: 0
   playerHips: {fileID: 1998322389}
 --- !u!135 &1848156644
 SphereCollider:
