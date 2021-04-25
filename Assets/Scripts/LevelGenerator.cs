@@ -23,6 +23,8 @@ public class LevelGenerator : MonoBehaviour
     public GameObject defaultChunkHide;
 
     private int chunksSwitchIndes = 0;
+
+    public LevelObjectsSpawner levelObjectsSpawner;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +40,7 @@ public class LevelGenerator : MonoBehaviour
         }
         sceneStartPosition = transform.position;
         lowestStaticLevelOffset -= ( tunnelChunksPool.Count - 1 ) * chunkHeight;
+        
     }
 
     public void GenerateNewTunnelChunk(int chunkIndex)
@@ -46,6 +49,10 @@ public class LevelGenerator : MonoBehaviour
         objectSpawned.transform.parent = defaultChunkHide.transform.parent;
         objectSpawned.transform.localPosition = new Vector3(chunkXOffset * chunkIndex, -( chunkHeight * chunkIndex ), 0);
         tunnelChunksPool.Add(objectSpawned);
+        for (int i = 0; i < objectSpawned.GetComponent<StairChunkObjectSpawner>().spawnLines.Length; i++)
+        {
+            levelObjectsSpawner.queueToSpawn.Add(objectSpawned.GetComponent<StairChunkObjectSpawner>().spawnLines[i]);
+        }
     }
 
     private void TunnelChunksDepthPlacement()

@@ -21,10 +21,10 @@ TagManager:
   - Rayfire
   - Furniture
   - 
-  - 
-  - 
-  - 
-  - 
+  - GarbageCollector
+  - BonusCollector
+  - Bonuses
+  - NpcAfterCollision
   - 
   - 
   - 
