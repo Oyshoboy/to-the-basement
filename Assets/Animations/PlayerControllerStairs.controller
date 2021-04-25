@@ -87,7 +87,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 7114755085682829180}
-    m_Position: {x: 50, y: 270, z: 0}
+    m_Position: {x: -40, y: 350, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -629988342971728126}
     m_Position: {x: 310, y: 270, z: 0}
@@ -96,7 +96,7 @@ AnimatorStateMachine:
     m_Position: {x: 300, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3545499330580662616}
-    m_Position: {x: 50, y: 420, z: 0}
+    m_Position: {x: 50, y: 270, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -2844373073002571201}
@@ -108,7 +108,7 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 60, y: 160, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: 7114755085682829180}
+  m_DefaultState: {fileID: -3545499330580662616}
 --- !u!1102 &-2300406515463170441
 AnimatorState:
   serializedVersion: 6
@@ -167,7 +167,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerController
+  m_Name: PlayerControllerStairs
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Falling

@@ -2,47 +2,77 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Common config")] [SerializeField]
+    private Vector3 sceneDefaultPosition;
+
+    public enum GameState
+    {
+        Beginning,
+        Start,
+        Falling,
+        End
+    };
+    
+    public enum GameControlls
+    {
+        Depth,
+        Stairs
+    };
+
+    public GameState gameState = GameState.Beginning;
+    public GameControlls gameControls = GameControlls.Depth;
+
+    [SerializeField] private Vector3 sceneFallingOffset;
+    public bool isCameraNeedToFollowTargetByX = false;
+    public UnityEvent InitEvent;
+
+
     [Header("Moving scene config")] [SerializeField]
     private GameObject gameCamera;
     [SerializeField] private GameObject movingSceneObject;
-    [SerializeField] private Transform cameraStartPosition;
-    [SerializeField] private Transform cameraDefaultPosition;
-    [SerializeField] private Transform cameraFallingPosition;
     [SerializeField] private float heightDamping = 1f;
     [SerializeField] public bool isSceneFollowingPlayerHeightRightNow = false;
+    public bool isWaitingForHeightOffset = true;
 
     [Header("Moving camera config")] [SerializeField]
-    private float transitionSpeed = 0.5f;
-
+    private ObjectLocalPositionManager objectLocalPositionManager;
     [SerializeField] public GameObject playerObject;
-
-    [Header("Common config")] [SerializeField]
-    private Vector3 sceneDefaultPosition;
-    public bool isGameOnBeginning = true;
-
-    [SerializeField] private Vector3 sceneFallingOffset;
-    [SerializeField] private bool isAnimationBeingMoved = false;
-    public Animator currentPlayerAnimator;
-    public bool isCameraFollowingTargetByX = false;
-    public GameObject sofa;
 
     [Header("Player Config")] [SerializeField]
     private PlayerVelocityLimiter playerVelocityLimiter;
-
-    public float moveSpeed = 10f;
+    public Animator currentPlayerAnimator;
+    public float playerMovementSpeed = 10f;
     private static readonly int Rolling = Animator.StringToHash("Rolling");
-    
+    public float fallingHelperPushForce = 100f;
+
     [Header("Player Rotation Controller")]
     Vector3 m_EulerAngleVelocity = new Vector3(0, 0, 100);
-
     [SerializeField] private float torqueSpeed = 300;
     [SerializeField] private bool isFlipProcessing = false;
-    
+
+    [Header("Scene preparations")]
+    [SerializeField] private Rigidbody[] objectsToDisableKinematics;
+
     private void Start()
+    {
+        InitEverything();
+    }
+
+    public void GameStateManager()
+    {
+        if (gameState == GameState.Beginning && objectLocalPositionManager.movePositionTargedIndex == 1 &&
+            !objectLocalPositionManager.isCurrentlyMoving)
+        {
+            gameState = GameState.Start;
+        }
+    }
+
+    private void InitEverything()
     {
         sceneDefaultPosition = movingSceneObject.transform.position;
         playerObject = GameObject.FindWithTag("Player");
@@ -52,21 +82,33 @@ public class GameManager : MonoBehaviour
 
     private void SetupPlayerAndStuffForGame()
     {
-        sofa.GetComponent<Rigidbody>().isKinematic = false;
+        InitEvent.Invoke();
+
+        if (objectsToDisableKinematics.Length > 0)
+        {
+            for (int i = 0; i < objectsToDisableKinematics.Length; i++)
+            {
+                objectsToDisableKinematics[i].isKinematic = false;
+                objectsToDisableKinematics[i].collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            }
+        }
+        
         playerVelocityLimiter.gameObject.GetComponent<PlayerRootManager>().playerPuppetMaster.pinWeight = 0;
     }
 
     private void CameraLookAtPlayer()
     {
-        if (isGameOnBeginning)
+        if (gameState == GameState.Beginning)
         {
             return;
         }
+
         if (isSceneFollowingPlayerHeightRightNow)
         {
-            var targetRotation = Quaternion.LookRotation(playerObject.transform.position - gameCamera.transform.position);
-            gameCamera.transform.rotation = Quaternion.Slerp(gameCamera.transform.rotation, targetRotation, 9 * Time.deltaTime);
-            //gameCamera.transform.LookAt(playerObject.transform);
+            var targetRotation =
+                Quaternion.LookRotation(playerObject.transform.position - gameCamera.transform.position);
+            gameCamera.transform.rotation =
+                Quaternion.Slerp(gameCamera.transform.rotation, targetRotation, 9 * Time.deltaTime);
         }
         else
         {
@@ -85,44 +127,45 @@ public class GameManager : MonoBehaviour
 
     private void CharacterAirControll()
     {
-
-        if (isSceneFollowingPlayerHeightRightNow && !isAnimationBeingMoved)
+        if (isSceneFollowingPlayerHeightRightNow && !objectLocalPositionManager.isCurrentlyMoving)
         {
-            
             if (Input.GetKeyDown(KeyCode.Space) && !isFlipProcessing)
             {
                 isFlipProcessing = true;
                 currentPlayerAnimator.SetBool(Rolling, true);
                 //StartCoroutine(CharacterFlipOne(1));
-            } else if (Input.GetKeyUp(KeyCode.Space) && isFlipProcessing)
+            }
+            else if (Input.GetKeyUp(KeyCode.Space) && isFlipProcessing)
             {
                 currentPlayerAnimator.SetBool(Rolling, false);
                 isFlipProcessing = false;
             }
-            
-            
+
             float h = Input.GetAxis("Horizontal");
             float v = Input.GetAxis("Vertical");
+            if (gameControls == GameControlls.Depth)
+            {
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce( transform.right * (playerMovementSpeed * Time.deltaTime * h));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (playerMovementSpeed * Time.deltaTime * v));
+            } else if (gameControls == GameControlls.Stairs)
+            {
+                if (fallingHelperPushForce != 0)
+                {
+                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                        transform.right * (fallingHelperPushForce * Time.deltaTime * 1));
+                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                        transform.up * (fallingHelperPushForce / 4 * Time.deltaTime * -1));
+                }
 
-            //var playerVelocityLimiterPos = playerVelocityLimiter.pelvisVelocitySampler.transform;
-            //playerVelocityLimiter.pelvisVelocitySampler.MovePosition(
-            //    playerVelocityLimiterPos.position + (playerVelocityLimiterPos.right * h + playerVelocityLimiterPos.up * v) * moveSpeed);
-            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (moveSpeed * Time.deltaTime * h));
-            playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (moveSpeed * Time.deltaTime * v));
+                if (playerMovementSpeed != null)
+                {
+                    playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                        transform.forward * (playerMovementSpeed * Time.deltaTime * v));
+                }
+            }
         }
     }
-    
-    
-    private void FlipController()
-    {
-        if (isFlipProcessing)
-        {
-            return;
-            Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * (Time.fixedDeltaTime * torqueSpeed));
-            playerVelocityLimiter.pelvisVelocitySampler.MoveRotation(playerVelocityLimiter.pelvisVelocitySampler.rotation * deltaRotation);
-        }
-    }
-    
+
     IEnumerator CharacterFlipOne(float duration)
     {
         float journey = 0f;
@@ -131,81 +174,72 @@ public class GameManager : MonoBehaviour
             journey = journey + Time.deltaTime;
             yield return null;
         }
+
         currentPlayerAnimator.SetBool(Rolling, false);
         isFlipProcessing = false;
     }
 
-    IEnumerator MoveCameraToTarget(Transform origin, Transform target, float duration)
+    private void SceneFollowTargetXY()
     {
-        isAnimationBeingMoved = true;
-        float journey = 0f;
-        while (journey <= duration)
+        var position = movingSceneObject.transform.position;
+        var targetY = playerObject.transform.position.y + sceneFallingOffset.y;
+        var lerpedY = Mathf.Lerp(position.y, targetY, heightDamping * Time.deltaTime);
+        var lerpedX = position.x;
+        if (isCameraNeedToFollowTargetByX)
         {
-            journey = journey + Time.deltaTime;
-            float percent = Mathf.Clamp01(journey / duration);
-
-            gameCamera.transform.localPosition = Vector3.Lerp(origin.localPosition, target.localPosition, percent);
-            gameCamera.transform.localRotation = Quaternion.Lerp(origin.localRotation, target.localRotation, percent);
-
-            yield return null;
+            var targetX = playerObject.transform.position.x + sceneFallingOffset.x;
+            lerpedX = Mathf.Lerp(position.x, targetX, heightDamping * Time.deltaTime);
         }
 
-        if (isGameOnBeginning)
-        {
-            isGameOnBeginning = false;
-        }
-
-        isAnimationBeingMoved = false;
+        position = new Vector3(lerpedX, lerpedY, position.z);
+        movingSceneObject.transform.position = position;
     }
 
     public void CameraSmoothFollowPlayerHeight()
     {
-        if (isSceneFollowingPlayerHeightRightNow && !isAnimationBeingMoved && movingSceneObject.transform.position.y >
-            playerObject.transform.position.y + sceneFallingOffset.y)
+        if (isSceneFollowingPlayerHeightRightNow && !objectLocalPositionManager.isCurrentlyMoving)
         {
-            var position = movingSceneObject.transform.position;
-            var lerpedHeight = Mathf.Lerp(position.y, playerObject.transform.position.y + sceneFallingOffset.y,
-                heightDamping * Time.deltaTime);
-
-            var lerpedX = position.x;
-            if (isCameraFollowingTargetByX)
+            if (movingSceneObject.transform.position.y > playerObject.transform.position.y + sceneFallingOffset.y)
             {
-                lerpedX = Mathf.Lerp(position.x, playerObject.transform.position.x + sceneFallingOffset.x,
-                    heightDamping * Time.deltaTime);
+                SceneFollowTargetXY();
+            } else if (!isWaitingForHeightOffset)
+            {
+                SceneFollowTargetXY();
             }
-            position = new Vector3(lerpedX, lerpedHeight, position.z);
-            movingSceneObject.transform.position = position;
         }
     }
 
     public void MoveCameraToFallingMode()
     {
+        currentPlayerAnimator.SetTrigger("Falling");
         isSceneFollowingPlayerHeightRightNow = true;
-        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraFallingPosition,
-            transitionSpeed));
+        objectLocalPositionManager.SetNewDestination(1);
+    }
+
+    public void MoveCameraToStairsMode()
+    {
+        currentPlayerAnimator.SetTrigger("Falling");
+        isSceneFollowingPlayerHeightRightNow = true;
+        objectLocalPositionManager.SetNewDestination(2);
     }
 
     public void MoveCameraToDefaultMode()
     {
-        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraDefaultPosition,
-            transitionSpeed));
+        objectLocalPositionManager.SetNewDestination(1);
     }
-    
+
     public void MoveCameraToStartMode()
     {
-        StartCoroutine(MoveCameraToTarget(gameCamera.transform, cameraStartPosition,
-            transitionSpeed));
+        objectLocalPositionManager.SetNewDestination(0);
     }
 
     private void FirstSpaceController()
     {
-        if (isGameOnBeginning && !isAnimationBeingMoved)
+        if (gameState == GameState.Beginning && !objectLocalPositionManager.isCurrentlyMoving)
         {
             if (Input.GetKeyDown("space"))
             {
-                //SetupPlayerAndStuffForGame();
                 MoveCameraToDefaultMode();
-
             }
         }
     }
@@ -214,7 +248,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CameraLookAtPlayer();
+        GameStateManager();
         SceneReloadController();
         FirstSpaceController();
         CharacterAirControll();
@@ -222,7 +256,7 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        CameraLookAtPlayer();
         CameraSmoothFollowPlayerHeight();
-        FlipController();
     }
 }

@@ -2181,6 +2181,7 @@ GameObject:
   - component: {fileID: 89763954}
   - component: {fileID: 89763953}
   - component: {fileID: 89763955}
+  - component: {fileID: 89763956}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2233,6 +2234,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c3d47ea76327449bb5804d861e869a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneDefaultPosition: {x: 0, y: 0, z: 0}
+  gameState: 1
+  sceneFallingOffset: {x: 0, y: -4, z: 0}
+  currentPlayerAnimator: {fileID: 1494831837}
+  isCameraNeedToFollowTargetByX: 0
+  InitEvent:
+    m_PersistentCalls:
+      m_Calls: []
   gameCamera: {fileID: 963194225}
   movingSceneObject: {fileID: 1087257688}
   cameraStartPosition: {fileID: 0}
@@ -2240,19 +2249,36 @@ MonoBehaviour:
   cameraFallingPosition: {fileID: 813139696}
   heightDamping: 15
   isSceneFollowingPlayerHeightRightNow: 0
-  transitionSpeed: 1
+  isWaitingForHeightOffset: 1
+  objectLocalPositionManager: {fileID: 89763956}
   playerObject: {fileID: 0}
-  sceneDefaultPosition: {x: 0, y: 0, z: 0}
-  isGameOnBeginning: 0
-  sceneFallingOffset: {x: 0, y: -4, z: 0}
-  isAnimationBeingMoved: 0
-  currentPlayerAnimator: {fileID: 1494831837}
-  isCameraFollowingTargetByX: 0
-  sofa: {fileID: 0}
   playerVelocityLimiter: {fileID: 1143623159}
   moveSpeed: 1000
   torqueSpeed: -30
   isFlipProcessing: 0
+--- !u!114 &89763956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89763952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7688803618ac62e409a337c5e98d7fc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destinations:
+  - destination: {fileID: 1853885292}
+    isRotatingWhileMoving: 1
+    timeToMove: 1
+  - destination: {fileID: 813139696}
+    isRotatingWhileMoving: 1
+    timeToMove: 1
+  objectToMove: {fileID: 963194225}
+  timeElapsed: 0
+  movePositionTargedIndex: 0
+  isCurrentlyMoving: 0
 --- !u!1 &95203885
 GameObject:
   m_ObjectHideFlags: 0
@@ -14034,7 +14060,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 8.11e-43, y: 0, z: 0, w: 0.000000001782996}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -30791,6 +30817,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 89763955}
+  triggeredEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 89763955}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: MoveCameraToFallingMode
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!65 &1575063197
 BoxCollider:
   m_ObjectHideFlags: 0

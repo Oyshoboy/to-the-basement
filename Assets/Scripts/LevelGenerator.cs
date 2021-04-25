@@ -56,7 +56,6 @@ public class LevelGenerator : MonoBehaviour
         if (heightDifferenceSingle > lastChunkIterationPlaced)
         {
             lastChunkIterationPlaced = heightDifferenceSingle;
-            Debug.Log("REPLACE CHUNKS!");
             lowestStaticLevelOffset -= chunkHeight;
             
             // THIS ONE IS FOR GENERATION
@@ -64,19 +63,24 @@ public class LevelGenerator : MonoBehaviour
             tunnelChunksPool.RemoveAt(0);
             GenerateNewTunnelChunk(initialPoolSize + chunksSwitchIndes);
             chunksSwitchIndes++;
-            
-            //tunnelChunksPool[chunksSwitchIndes].transform.position = new Vector3(tunnelChunksPool[chunksSwitchIndes].transform.position.x, lowestStaticLevelOffset, tunnelChunksPool[chunksSwitchIndes].transform.position.z);
-            //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.ResetRigid();
-            //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.simulationType = SimType.Kinematic;
-            
-            //chunksSwitchIndes++;
-            
-            // RESET CHUNKS INDEX
-            // if (chunksSwitchIndes == tunnelChunksPool.Count)
-            // {
-            //     chunksSwitchIndes = 0;
-            // }
+
+            //PoolingChunksSwap();
         }
+    }
+
+    private void PoolingChunksSwap()
+    {
+        //tunnelChunksPool[chunksSwitchIndes].transform.position = new Vector3(tunnelChunksPool[chunksSwitchIndes].transform.position.x, lowestStaticLevelOffset, tunnelChunksPool[chunksSwitchIndes].transform.position.z);
+        //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.ResetRigid();
+        //tunnelChunksPool[chunksSwitchIndes].GetComponent<RayfireIntitialize>().rayfireRigid.simulationType = SimType.Kinematic;
+            
+        //chunksSwitchIndes++;
+            
+        // RESET CHUNKS INDEX
+        // if (chunksSwitchIndes == tunnelChunksPool.Count)
+        // {
+        //     chunksSwitchIndes = 0;
+        // }
     }
     
     // Update is called once per frame

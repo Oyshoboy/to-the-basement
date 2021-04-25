@@ -22,7 +22,7 @@ public class PistonProximityActivator : MonoBehaviour
     {
         if (isplayerObjectNotNull && pistons.Length > 0)
         {
-            if (!gameManager.isGameOnBeginning)
+            if (gameManager.gameState != GameManager.GameState.Beginning)
             {
                 pistonsProximityController();
             }
