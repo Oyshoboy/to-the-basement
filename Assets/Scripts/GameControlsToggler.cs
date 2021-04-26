@@ -11,7 +11,7 @@ public class GameControlsToggler : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"Times played: {PlayerPrefs.GetFloat("TimesPlayed")}");
+        //.Log($"Times played: {PlayerPrefs.GetFloat("TimesPlayed")}");
         if (PlayerPrefs.GetFloat("TimesPlayed") > 0)
         {
             gameControlsObject.SetActive(false);

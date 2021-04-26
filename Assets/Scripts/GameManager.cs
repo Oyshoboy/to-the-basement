@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -10,7 +11,6 @@ public class GameManager : MonoBehaviour
     private Vector3 sceneDefaultPosition;
     public GameObject pressSpaceButton;
     public GameArcadeManager arcadeManager;
-
     public enum GameState
     {
         Beginning,
@@ -302,6 +302,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        var backGroundMusicManager = playerObject = GameObject.FindWithTag("BackgroundMusicManager");
+        if (backGroundMusicManager)
+        {
+            backGroundMusicManager.GetComponent<BackgroundMusicManager>().gameManager = this;
+        }
+    }
 
     // Update is called once per frame
     void Update()

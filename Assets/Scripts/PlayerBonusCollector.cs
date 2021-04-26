@@ -28,16 +28,16 @@ public class PlayerBonusCollector : MonoBehaviour
     private void Start()
     {
         var prevMoneySaved = PlayerPrefs.GetFloat("TotalEarned");
-        Debug.Log($"Total money earned: {prevMoneySaved}");
+        //Debug.Log($"Total money earned: {prevMoneySaved}");
         
         var totalNpcCollided = PlayerPrefs.GetFloat("NpcTotalCollided");
-        Debug.Log($"Total NPC collided: {totalNpcCollided}");
+        //Debug.Log($"Total NPC collided: {totalNpcCollided}");
         
         var maxDistanceTraveledRecord = PlayerPrefs.GetFloat("MaxDistanceTraveled");
-        Debug.Log($"Distance record: {maxDistanceTraveledRecord}");
+        //Debug.Log($"Distance record: {maxDistanceTraveledRecord}");
         
         var playerSkillLevel = PlayerPrefs.GetFloat("PlayerSkillLevel");
-        Debug.Log($"Player skill level: {playerSkillLevel + 1}");
+        //Debug.Log($"Player skill level: {playerSkillLevel + 1}");
     }
 
     private void OnTriggerEnter(Collider other)
