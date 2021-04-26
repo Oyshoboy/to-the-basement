@@ -137,7 +137,7 @@ MonoBehaviour:
     unyielding: 0
     activatable: 0
   limitations:
-    solidity: 0.1
+    solidity: 0.01
     depth: 1
     time: 0.2
     size: 0.1

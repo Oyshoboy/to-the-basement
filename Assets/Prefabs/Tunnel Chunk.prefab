@@ -509,7 +509,7 @@ MonoBehaviour:
   initialization: 0
   simulationType: 3
   objectType: 0
-  demolitionType: 2
+  demolitionType: 1
   physics:
     materialType: 2
     material: {fileID: 0}
