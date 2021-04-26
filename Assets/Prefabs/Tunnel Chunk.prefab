@@ -42,12 +42,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818768597698498367}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c48cc5941d67df4cb50a31559ff1808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionCollider: {fileID: 0}
+  collisionCollider: {fileID: 7085291137223702785}
   rayfireRigid: {fileID: 6818768598668716609}
 --- !u!1 &6818768597892606247
 GameObject:
@@ -418,7 +418,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6818768598668716608
 Transform:
   m_ObjectHideFlags: 0
@@ -1113,6 +1113,10 @@ PrefabInstance:
     - target: {fileID: 6861829864712378103, guid: 66184c361e2d26449b65fc63e1ee631f, type: 3}
       propertyPath: m_Name
       value: Hatch Alternative
+      objectReference: {fileID: 0}
+    - target: {fileID: 6861829864712378103, guid: 66184c361e2d26449b65fc63e1ee631f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 66184c361e2d26449b65fc63e1ee631f, type: 3}

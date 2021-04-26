@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &22228255
 Transform:
   m_ObjectHideFlags: 0
@@ -2818,6 +2818,10 @@ PrefabInstance:
     - target: {fileID: 4949198215250467889, guid: 5a16c7460994a1a439a4c8a45a67a0e1, type: 3}
       propertyPath: m_Name
       value: Fractured Object
+      objectReference: {fileID: 0}
+    - target: {fileID: 4949198215250467889, guid: 5a16c7460994a1a439a4c8a45a67a0e1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4949198215250467895, guid: 5a16c7460994a1a439a4c8a45a67a0e1, type: 3}
       propertyPath: m_RootOrder
