@@ -66,6 +66,9 @@ public class SoundController : MonoBehaviour
         
         var randomSound2 = npcPowerUpSounds[UnityEngine.Random.Range(0, npcPowerUpSounds.Length)];
         StartCoroutine(CoPlayDelayedClip(randomSound2, .1f, 0.2f));
+        
+        var randomSound4 = npcGruntSounds[UnityEngine.Random.Range(0, npcGruntSounds.Length)];
+        fxSoundsSource.PlayOneShot(randomSound4, UnityEngine.Random.Range(0.3f, 0.8f));
     }
 
     public void PlayBodyObjectHitSound()
