@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
+    public GameArcadeManager arcadeManager;
     public enum GameState
     {
         Beginning,
@@ -123,6 +124,11 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R) && !isRestartRequested)
         {
+            if (gameState == GameState.Falling)
+            {
+                objectLocalPositionManager.ToggleUiHide();
+            }
+
             isRestartRequested = true;
             doTweenAnimation.DOPlayBackwards();
         }
@@ -162,9 +168,11 @@ public class GameManager : MonoBehaviour
             }
             else if (gameControls == GameControlls.Stairs)
             {
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (fallingHelperPushForce * Time.deltaTime * 1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.up * (fallingHelperPushForce / 4 * Time.deltaTime * -1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (playerMovementSpeed * Time.deltaTime * v));
+                var pushForceHelper = fallingHelperPushForce * arcadeManager.gameSkillOverallModif;
+                var movementSpeedHelper = playerMovementSpeed * arcadeManager.gameSkillOverallModif;
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (pushForceHelper * Time.deltaTime * 1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.up * (pushForceHelper / 4 * Time.deltaTime * -1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (movementSpeedHelper * Time.deltaTime * v));
             }
         }
     }

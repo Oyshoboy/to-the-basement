@@ -10,10 +10,12 @@ using UnityEngine.UI;
 public class PlayerSkills
 {
     public float level = 1;
-    public float velocity = 300f;
+    public float maxVelocity = 300f;
     public float mpg = 1f;
+    public float mpt = 1f;
     public float fallingPushForce = 200f;
     public float controlForce = 1000f;
+    public float npcGasPrice = 5f;
     public float wallsSolidity = 0.3f;
 }
 
@@ -29,9 +31,9 @@ public class GameArcadeManager : MonoBehaviour
     public float gameSkillOverallModif = 1f;
     public float gameExhaustSpeed = 0.1f;
     public float gameExhaustByTime = 0.85f;
-    float playerVlocitySmoother = 0.95f;
+    float playerVlocitySmoother = 0.93f;
     public float playerGas = 100;
-    
+
     public float gasPushForcePower;
     public float playerTotalDistanceTraveled;
 
@@ -39,6 +41,7 @@ public class GameArcadeManager : MonoBehaviour
     [Header("Player skills")]
     public PlayerSkills playerMaxSkills;
     public PlayerSkills playerDefaultSkills;
+    public PlayerSkills levelCalculatedParams;
 
     [Header("Refferences")] 
     public GameManager gameManager;
@@ -50,13 +53,25 @@ public class GameArcadeManager : MonoBehaviour
     //SYSTEM VARIABLES
     [SerializeField] private Vector3 playerStartPosition;
     [SerializeField] private float maxDistanceTraveled;
+    
     // Start is called before the first frame update
     void Start()
     {
         playerStartPosition = playerPhysicsRoot.transform.position;
         playerVlocitySmoother = playerVelocityLimiter.velocitySmoother;
-        gameManager.playerMovementSpeed = playerDefaultSkills.controlForce;
-        gameManager.fallingHelperPushForce = playerDefaultSkills.fallingPushForce;
+        gameManager.playerMovementSpeed = levelCalculatedParams.controlForce;
+        gameManager.fallingHelperPushForce = levelCalculatedParams.fallingPushForce;
+    }
+
+    public void SetupLevelConfigurationBasedOnPlayerLevel()
+    {
+        
+    }
+    
+    // SKILLS CALCULATORS
+    public float GasMptCalculator()
+    {
+        return levelCalculatedParams.mpt;
     }
 
     private void TotalDistanceTraveledTracker()
@@ -64,9 +79,15 @@ public class GameArcadeManager : MonoBehaviour
         playerTotalDistanceTraveled = Vector3.Distance(playerStartPosition, playerPhysicsRoot.transform.position);
         if (playerTotalDistanceTraveled > maxDistanceTraveled)
         {
-            IncreaseGas(-((playerTotalDistanceTraveled - maxDistanceTraveled) * playerDefaultSkills.mpg));
+            IncreaseGas(-((playerTotalDistanceTraveled - maxDistanceTraveled) * levelCalculatedParams.mpg));
             maxDistanceTraveled = playerTotalDistanceTraveled;
+            PlayerPrefs.SetFloat("MaxDistanceTraveled", maxDistanceTraveled);
         }
+    }
+
+    public void AddGase()
+    {
+        playerGas += levelCalculatedParams.npcGasPrice;
     }
 
     private string FloatToThreeDigitText(float value)
@@ -101,7 +122,7 @@ public class GameArcadeManager : MonoBehaviour
     {
         if (gameManager.gameState == GameManager.GameState.Falling)
         {
-            playerGas -= Time.deltaTime * gameExhaustByTime;
+            playerGas -= Time.deltaTime * GasMptCalculator();
         }
 
         if (playerGas <= 0)
@@ -123,11 +144,11 @@ public class GameArcadeManager : MonoBehaviour
     {
         var velocityDecreaseFactor = ( Time.deltaTime * gameExhaustSpeed ) * 100;
         playerVelocityLimiter.pelvisMaxVelocity -= velocityDecreaseFactor;
-        playerVelocityLimiter.restMaxVelocity -= velocityDecreaseFactor / 2;
+        playerVelocityLimiter.restMaxVelocity -= velocityDecreaseFactor / 1.3f;
         
         
-        gameManager.playerMovementSpeed -= playerDefaultSkills.controlForce * gameSkillOverallModif;
-        gameManager.fallingHelperPushForce -= playerDefaultSkills.fallingPushForce * gameSkillOverallModif;
+        gameManager.playerMovementSpeed -= levelCalculatedParams.controlForce * gameSkillOverallModif;
+        gameManager.fallingHelperPushForce -= levelCalculatedParams.fallingPushForce * gameSkillOverallModif;
 
         if (gameManager.playerMovementSpeed <= 0)
         {
@@ -139,17 +160,17 @@ public class GameArcadeManager : MonoBehaviour
             gameManager.fallingHelperPushForce = 0;
         }
         
-        if (playerVelocityLimiter.pelvisMaxVelocity <= 0)
+        if (playerVelocityLimiter.pelvisMaxVelocity <= 0.05f)
         {
-            playerVelocityLimiter.pelvisMaxVelocity = 0;
-            playerVelocityLimiter.velocitySmoother = playerVlocitySmoother * 0.95f;
+            playerVelocityLimiter.pelvisMaxVelocity = 0.05f;
+            playerVelocityLimiter.velocitySmoother = playerVlocitySmoother;
             playerPuppetMaster.state = PuppetMaster.State.Dead;
         }
         
-        if (playerVelocityLimiter.restMaxVelocity <= 0)
+        if (playerVelocityLimiter.restMaxVelocity <= 0.05f)
         {
-            playerVelocityLimiter.restMaxVelocity = 0;
-            playerVelocityLimiter.restVelocitySmoother = playerVlocitySmoother * 0.95f;
+            playerVelocityLimiter.restMaxVelocity = 0.05f;
+            playerVelocityLimiter.restVelocitySmoother = playerVlocitySmoother;
         }
     }
 

@@ -518,7 +518,7 @@ BoxCollider:
   m_GameObject: {fileID: 1571978119}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -1691,9 +1691,6 @@ MonoBehaviour:
   - {fileID: 2770615487128663364}
   - {fileID: 1347759980756824732}
   - {fileID: 7940736924023172029}
-  objectsToSpawn:
-  - {fileID: 4456866357437101268, guid: 0c4bdafdf7897b743b8c0a339aa54bd5, type: 3}
-  maxNPCPool: 20
 --- !u!1 &8732406383570026431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,7 +1877,7 @@ BoxCollider:
   m_GameObject: {fileID: 8819415342771843822}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

@@ -25,6 +25,7 @@ public class ObjectLocalPositionManager : MonoBehaviour
     private Vector3 uiStartPost;
     private Quaternion uiStartRot;
     public Transform uiInGamePos;
+    public bool hideUI;
     [SerializeField] private float timeElapsedForUi = 0;
     [SerializeField] private float timeToMoveUi = 1f;
 
@@ -39,17 +40,34 @@ public class ObjectLocalPositionManager : MonoBehaviour
         if(!uIObject) return;
         if (timeElapsedForUi < timeToMoveUi)
         {
-            var percent = timeElapsedForUi / timeToMoveUi;
-            timeElapsedForUi += Time.deltaTime / timeToMoveUi;
-            var smoothStep = Mathf.SmoothStep(0, 1, percent);
-            uIObject.transform.localPosition = Vector3.Lerp(uiStartPost, uiInGamePos.localPosition, smoothStep);
-            uIObject.transform.localRotation = Quaternion.Lerp(uiStartRot, uiInGamePos.localRotation, smoothStep);
+            if (hideUI)
+            {
+                var percent = timeElapsedForUi / timeToMoveUi;
+                timeElapsedForUi += Time.deltaTime / timeToMoveUi;
+                var smoothStep = Mathf.SmoothStep(0, 1, percent);
+                uIObject.transform.localPosition = Vector3.Lerp(uiInGamePos.localPosition,uiStartPost, smoothStep);
+                uIObject.transform.localRotation = Quaternion.Lerp(uiInGamePos.localRotation, uiStartRot, smoothStep);
+            }
+            else
+            {
+                var percent = timeElapsedForUi / timeToMoveUi;
+                timeElapsedForUi += Time.deltaTime / timeToMoveUi;
+                var smoothStep = Mathf.SmoothStep(0, 1, percent);
+                uIObject.transform.localPosition = Vector3.Lerp(uiStartPost, uiInGamePos.localPosition, smoothStep);
+                uIObject.transform.localRotation = Quaternion.Lerp(uiStartRot, uiInGamePos.localRotation, smoothStep);
+            }
         }
     }
 
     public void ToggleUiMovement()
     {
         timeElapsedForUi = 0;
+    }
+    
+    public void ToggleUiHide()
+    {
+        timeElapsedForUi = 0;
+        hideUI = true;
     }
     
     private void InitUiObject()

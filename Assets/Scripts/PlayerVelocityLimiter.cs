@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlayerVelocityLimiter : MonoBehaviour
 {
+    public float wightModificator = 1f;
+    
     [Header("Pelvis Configuration")]
     public Rigidbody pelvisVelocitySampler;
-
     [Range(0.1f, 0.99f)]
     public float velocitySmoother = 0.95f;
     public float pelvisMaxVelocity = 400f;
@@ -24,6 +25,12 @@ public class PlayerVelocityLimiter : MonoBehaviour
     void Start()
     {
         rigidbodies = playerRagdoll.GetComponentsInChildren<Rigidbody>();
+
+        for (int i = 0; i < rigidbodies.Length; i++)
+        {
+            var currentBodyMass = rigidbodies[i].GetComponent<Rigidbody>().mass;
+            rigidbodies[i].GetComponent<Rigidbody>().mass = currentBodyMass * wightModificator;
+        }
     }
 
     private void rigidbodyVelocityLimitter(Rigidbody rb, float maxVelocity, float smooth)
