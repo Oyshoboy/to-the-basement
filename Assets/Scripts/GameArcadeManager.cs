@@ -157,11 +157,21 @@ public class GameArcadeManager : MonoBehaviour
 
     private void IncreaseGas(float decreaseFactor)
     {
+        if (gameManager.gameControls == GameManager.GameControlls.Depth)
+        {
+            return;
+        }
         playerGas += decreaseFactor;
     }
 
     private void PlayerOverallModifController()
     {
+
+        if (gameManager.gameControls == GameManager.GameControlls.Depth)
+        {
+            return;
+        }
+
         if (gameManager.gameState == GameManager.GameState.Falling)
         {
             playerGas -= Time.deltaTime * GasMptCalculator();

@@ -13,5 +13,10 @@ public class GarbageCleaner : MonoBehaviour
          Destroy(other.transform.parent.gameObject);
          levelObjectsSpawner.NPCSpawned--;
       }
+
+      if (other.gameObject.layer == 18)
+      {
+         Destroy(other);
+      }
    }
 }
