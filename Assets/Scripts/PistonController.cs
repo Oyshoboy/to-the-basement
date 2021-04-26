@@ -16,6 +16,7 @@ public class PistonController : MonoBehaviour
     public bool isPistonExtending = false;
     public bool isPistonActive = true;
     public bool isThisPistonLast = false;
+    public SoundController soundController;
     
     void Start()
     {
@@ -41,13 +42,21 @@ public class PistonController : MonoBehaviour
 
     public void PistonExtensionToggleController()
     {
-        if (Input.GetKeyDown("space") && !isPistonExtending)
+        if (Input.GetKeyDown("space") && !isPistonExtending && soundController.arcadeManager.gameManager.gameState == GameManager.GameState.Start)
         {
+            soundController.PlayPistonSound();
             isPistonExtending = true;
         }
         if(Input.GetKeyUp("space") && isPistonExtending)
         {
             isPistonExtending = false;
+            if (isPistonActive)
+            {
+                if (soundController.arcadeManager.gameManager.gameControls == GameManager.GameControlls.Depth)
+                {
+                    soundController.PlayPistonSound();
+                }
+            }
         }
         
         PistonExtensionController();

@@ -38,6 +38,11 @@ public class PistonProximityActivator : MonoBehaviour
         isplayerObjectNotNull = playerObject != null;
         playerObject = GameObject.FindWithTag("Player");
         pistons = GameObject.FindObjectsOfType<PistonController>();
+
+        for (int i = 0; i < pistons.Length; i++)
+        {
+            pistons[i].soundController = gameManager.arcadeManager.soundController;
+        }
     }
 
     private void pistonsProximityController()

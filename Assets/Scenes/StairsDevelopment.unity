@@ -1436,6 +1436,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: cfca95182a439e54fbd807d6c3cb6c46, type: 3}
   - {fileID: 8300000, guid: 9980e955841f28341937e5306aeef347, type: 3}
   - {fileID: 8300000, guid: 6812aefc61f29534c9e1b2fa83beaa8c, type: 3}
+  pistonSounds:
+  - {fileID: 8300000, guid: f31881238e3bee14594bf47714b11229, type: 3}
+  - {fileID: 8300000, guid: bedd0b3cd41d5d64ab27422b13b509a4, type: 3}
+  - {fileID: 8300000, guid: 2a9aba0f6211cb54ca5c8256df9d6185, type: 3}
   gameOverSound: {fileID: 8300000, guid: 96b0e519f80898f4daa7382d24b0b48f, type: 3}
   barkSound: {fileID: 8300000, guid: 020cc9d52e915a940bec7c1dc9c5b981, type: 3}
   levelUpSound: {fileID: 8300000, guid: 5af3851f938b3d74ba6740c76695a2db, type: 3}

@@ -23,6 +23,7 @@ public class SoundController : MonoBehaviour
     public AudioClip[] npcPowerUpSounds;
     public AudioClip[] npcHitSounds;
     public AudioClip[] breakSounds;
+    public AudioClip[] pistonSounds;
     public AudioClip gameOverSound;
     public AudioClip barkSound;
     public AudioClip levelUpSound;
@@ -90,6 +91,21 @@ public class SoundController : MonoBehaviour
     {
         fxSoundsSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
         fxSoundsSource.PlayOneShot(gameOverSound, .2f);
+    }
+    
+    public void PlayPistonSound()
+    {
+        if (arcadeManager.gameManager.gameControls == GameManager.GameControlls.Stairs)
+        {
+            fxSoundsSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+            fxSoundsSource.PlayOneShot(barkSound, 1.5f);
+        }
+        else
+        {
+            fxSoundsSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+            var randomSound = pistonSounds[UnityEngine.Random.Range(0, pistonSounds.Length)];
+            fxSoundsSource.PlayOneShot(randomSound, .35f);
+        }
     }
 
     public void WindSoundController()
