@@ -988,6 +988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneDefaultPosition: {x: 0, y: 0, z: 0}
   pressSpaceButton: {fileID: 0}
+  dogsThoughts: {fileID: 0}
   arcadeManager: {fileID: 89763959}
   gameState: 1
   gameControls: 0
@@ -10569,6 +10570,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -10644,6 +10646,32 @@ Transform:
   m_Father: {fileID: 1087257689}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc355b5e6248ea4c93b3b96603afaba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Color: {r: 1, g: 1, b: 1, a: 1}
+  Hue: 0
+  Contrast: 0.076
+  Brightness: -0.04
+  Saturation: -0.02
+  Exposure: 0
+  Gamma: 0
+  Sharpness: 0
+  Blur: 0
+  BlurMask: {fileID: 0}
+  VignetteColor: {r: 0, g: 0, b: 0, a: 1}
+  VignetteAmount: 0.005
+  VignetteSoftness: 0.4
+  material: {fileID: 2100000, guid: f04e630018f946b428a07a09856d123a, type: 2}
 --- !u!1 &972718681
 GameObject:
   m_ObjectHideFlags: 0
