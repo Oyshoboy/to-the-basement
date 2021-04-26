@@ -1301,7 +1301,7 @@ MonoBehaviour:
   gasPerNPCCollision: 10
   coinPrice: 25
   gameSkillOverallModif: 1
-  gameExhaustSpeed: 0.1
+  gameExhaustSpeed: 0.5
   gameExhaustByTime: 0.85
   playerGas: 100
   gasPushForcePower: 0
@@ -1338,6 +1338,9 @@ MonoBehaviour:
   playerPhysicsRoot: {fileID: 1998322388}
   playerVelocityLimiter: {fileID: 1143623159}
   playerPuppetMaster: {fileID: 1442310923}
+  isPlayerDead: 0
+  isGameOver: 0
+  resetPlayerLevelSkill: 0
   playerStartPosition: {x: 0, y: 0, z: 0}
   maxDistanceTraveled: 0
 --- !u!114 &89763958

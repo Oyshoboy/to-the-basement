@@ -49,6 +49,9 @@ public class GameArcadeManager : MonoBehaviour
     public GameObject playerPhysicsRoot;
     public PlayerVelocityLimiter playerVelocityLimiter;
     public PuppetMaster playerPuppetMaster;
+    public bool isPlayerDead = false;
+    public bool isGameOver = false;
+    public bool resetPlayerLevelSkill = false;
     
     //SYSTEM VARIABLES
     [SerializeField] private Vector3 playerStartPosition;
@@ -219,11 +222,31 @@ public class GameArcadeManager : MonoBehaviour
         }
     }
 
+    private void GameOverController()
+    {
+        if (playerGas < 0.05f && playerVelocityLimiter.currentVelocity < 0.5f && !isGameOver)
+        {
+            isGameOver = true;
+            Debug.Log("GAME OVER");
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         TotalDistanceTraveledTracker();
         PlayerOverallModifController();
         UIDynamicUpdate();
+        GameOverController();
+        
+        if (resetPlayerLevelSkill)
+        {
+            PlayerPrefs.SetFloat("PlayerSkillLevel", 0);
+        }
+
+        if (isPlayerDead)
+        {
+            playerGas = 0;
+        }
     }
 }
