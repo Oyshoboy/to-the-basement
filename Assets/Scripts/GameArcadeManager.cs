@@ -81,7 +81,10 @@ public class GameArcadeManager : MonoBehaviour
         {
             IncreaseGas(-((playerTotalDistanceTraveled - maxDistanceTraveled) * levelCalculatedParams.mpg));
             maxDistanceTraveled = playerTotalDistanceTraveled;
-            PlayerPrefs.SetFloat("MaxDistanceTraveled", maxDistanceTraveled);
+            if (maxDistanceTraveled > PlayerPrefs.GetFloat("MaxDistanceTraveled"))
+            {
+                PlayerPrefs.SetFloat("MaxDistanceTraveled", maxDistanceTraveled);
+            }
         }
     }
 
@@ -90,7 +93,7 @@ public class GameArcadeManager : MonoBehaviour
         playerGas += levelCalculatedParams.npcGasPrice;
     }
 
-    private string FloatToThreeDigitText(float value)
+    public string FloatToThreeDigitText(float value)
     {
         if (value < 100 && value > 9)
         {
@@ -128,10 +131,17 @@ public class GameArcadeManager : MonoBehaviour
         if (playerGas <= 0)
         {
             gameSkillOverallModif -= Time.deltaTime * gameExhaustSpeed;
-            
             if (gameSkillOverallModif <= 0)
             {
                 gameSkillOverallModif = 0;
+            }
+
+            if (gameSkillOverallModif >= 0.33f)
+            {
+                playerPuppetMaster.muscleWeight = gameSkillOverallModif;
+            } else if (gameSkillOverallModif < 0.33f)
+            {
+                gameManager.currentPlayerAnimator.enabled = false;
             }
             
             PlayerExhaust();
@@ -159,18 +169,15 @@ public class GameArcadeManager : MonoBehaviour
         {
             gameManager.fallingHelperPushForce = 0;
         }
-        
-        if (playerVelocityLimiter.pelvisMaxVelocity <= 0.05f)
+
+        if (playerVelocityLimiter.pelvisMaxVelocity <= 10f)
         {
-            playerVelocityLimiter.pelvisMaxVelocity = 0.05f;
-            playerVelocityLimiter.velocitySmoother = playerVlocitySmoother;
-            playerPuppetMaster.state = PuppetMaster.State.Dead;
+            playerVelocityLimiter.pelvisMaxVelocity = 10f;
         }
         
-        if (playerVelocityLimiter.restMaxVelocity <= 0.05f)
+        if (playerVelocityLimiter.restMaxVelocity <= 10f)
         {
-            playerVelocityLimiter.restMaxVelocity = 0.05f;
-            playerVelocityLimiter.restVelocitySmoother = playerVlocitySmoother;
+            playerVelocityLimiter.restMaxVelocity = 10f;
         }
     }
 

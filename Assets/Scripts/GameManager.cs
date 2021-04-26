@@ -8,7 +8,9 @@ public class GameManager : MonoBehaviour
 {
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
+
     public GameArcadeManager arcadeManager;
+
     public enum GameState
     {
         Beginning,
@@ -30,10 +32,9 @@ public class GameManager : MonoBehaviour
     public bool isCameraNeedToFollowTargetByX = false;
     public UnityEvent InitEvent;
 
-    [Header("Fadeout Config")]
-    public DOTweenAnimation doTweenAnimation;
+    [Header("Fadeout Config")] public DOTweenAnimation doTweenAnimation;
     public bool isRestartRequested = false;
-    
+
     [Header("Moving scene config")] [SerializeField]
     private GameObject gameCamera;
 
@@ -163,16 +164,21 @@ public class GameManager : MonoBehaviour
             float v = Input.GetAxis("Vertical");
             if (gameControls == GameControlls.Depth)
             {
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (playerMovementSpeed * Time.deltaTime * h));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (playerMovementSpeed * Time.deltaTime * v));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                    transform.right * (playerMovementSpeed * Time.deltaTime * h));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                    transform.forward * (playerMovementSpeed * Time.deltaTime * v));
             }
             else if (gameControls == GameControlls.Stairs)
             {
                 var pushForceHelper = fallingHelperPushForce * arcadeManager.gameSkillOverallModif;
                 var movementSpeedHelper = playerMovementSpeed * arcadeManager.gameSkillOverallModif;
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (pushForceHelper * Time.deltaTime * 1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.up * (pushForceHelper / 4 * Time.deltaTime * -1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (movementSpeedHelper * Time.deltaTime * v));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                    transform.right * (pushForceHelper * Time.deltaTime * 1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                    transform.up * (pushForceHelper / 4 * Time.deltaTime * -1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
+                    transform.forward * (movementSpeedHelper * Time.deltaTime * v));
             }
         }
     }
@@ -235,6 +241,8 @@ public class GameManager : MonoBehaviour
         currentPlayerAnimator.SetTrigger("Falling");
         isSceneFollowingPlayerHeightRightNow = true;
         objectLocalPositionManager.SetNewDestination(2);
+        var totalTimesPlayed = PlayerPrefs.GetFloat("TimesPlayed");
+        PlayerPrefs.SetFloat("TimesPlayed", totalTimesPlayed + 1);
     }
 
     public void MoveCameraToDefaultMode()
