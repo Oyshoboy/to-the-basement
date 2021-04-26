@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
     public GameObject pressSpaceButton;
+    public GameObject dogsThoughts;
     public GameArcadeManager arcadeManager;
     public enum GameState
     {
@@ -76,6 +77,7 @@ public class GameManager : MonoBehaviour
             !objectLocalPositionManager.isCurrentlyMoving)
         {
             gameState = GameState.Start;
+            dogsThoughts.SetActive(false);
         }
     }
 
