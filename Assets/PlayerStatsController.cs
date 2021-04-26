@@ -16,7 +16,7 @@ public class PlayerStatsController : MonoBehaviour
   public ParticleSystem levelUpParticles;
   private void LevelUpButtonAppearController()
   {
-    if (totalEarned >= levelUpPrice && currentLevel < maxLevel)
+    if (totalEarned >= levelUpPrice && currentLevel + 1 < maxLevel)
     {
       levelUpButton.SetActive(true);
     }
@@ -43,7 +43,7 @@ public class PlayerStatsController : MonoBehaviour
   {
     if (arcadeManager.gameManager.gameState == GameManager.GameState.Beginning || arcadeManager.gameManager.gameState == GameManager.GameState.Start)
     {
-      if (totalEarned >= levelUpPrice && currentLevel < maxLevel)
+      if (totalEarned >= levelUpPrice && currentLevel + 1 < maxLevel)
       {
         PlayerPrefs.SetFloat("TotalEarned", totalEarned - levelUpPrice);
         PlayerPrefs.SetFloat("PlayerSkillLevel", currentLevel + 1);

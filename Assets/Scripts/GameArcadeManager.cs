@@ -59,13 +59,51 @@ public class GameArcadeManager : MonoBehaviour
     {
         playerStartPosition = playerPhysicsRoot.transform.position;
         playerVlocitySmoother = playerVelocityLimiter.velocitySmoother;
-        gameManager.playerMovementSpeed = levelCalculatedParams.controlForce;
-        gameManager.fallingHelperPushForce = levelCalculatedParams.fallingPushForce;
+        SetupLevelConfigurationBasedOnPlayerLevel();
     }
 
     public void SetupLevelConfigurationBasedOnPlayerLevel()
     {
+        var currentPlayerLevel = PlayerPrefs.GetFloat("PlayerSkillLevel");
+        // = currentPlayerLevel > 8 ? 10 : currentPlayerLevel;
+        var playerMaxLevl = playerMaxSkills.level;
+        var playerExperiencCoef = currentPlayerLevel / playerMaxLevl;
         
+        // VELOCITY CALCULATING
+        var minMaxVelocityDifference = playerMaxSkills.maxVelocity - playerDefaultSkills.maxVelocity;
+        var calculatedMaxVelocity = minMaxVelocityDifference * playerExperiencCoef;
+        levelCalculatedParams.maxVelocity = playerDefaultSkills.maxVelocity + calculatedMaxVelocity;
+        
+        // MPG Calculating
+        var minMaxMPGDifferece = playerMaxSkills.mpg - playerDefaultSkills.mpg;
+        var calculatedMPG = minMaxMPGDifferece * playerExperiencCoef;
+        levelCalculatedParams.mpg = playerDefaultSkills.mpg + calculatedMPG;
+        
+        //MPT Calculating
+        var minMaxMPTDifferece = playerMaxSkills.mpt - playerDefaultSkills.mpt;
+        var calculatedMPT = minMaxMPTDifferece * playerExperiencCoef;
+        levelCalculatedParams.mpt = playerDefaultSkills.mpt + calculatedMPT;
+        
+        //Falling push force Calculating
+        var minMaxPushForceDifferece = playerMaxSkills.fallingPushForce - playerDefaultSkills.fallingPushForce;
+        var calculatedPushForce = minMaxPushForceDifferece * playerExperiencCoef;
+        levelCalculatedParams.fallingPushForce = playerDefaultSkills.fallingPushForce + calculatedPushForce;
+        
+        //Control force Calculating
+        var minMaxControlForceDifferece = playerMaxSkills.controlForce - playerDefaultSkills.controlForce;
+        var calculatedControlForce = minMaxControlForceDifferece * playerExperiencCoef;
+        levelCalculatedParams.controlForce = playerDefaultSkills.controlForce + calculatedControlForce;
+
+        levelCalculatedParams.level = currentPlayerLevel;
+        UpdateGamePhysicsSettingsBasedOnLevel();
+    }
+
+    private void UpdateGamePhysicsSettingsBasedOnLevel()
+    {
+        gameManager.playerMovementSpeed = levelCalculatedParams.controlForce;
+        gameManager.fallingHelperPushForce = levelCalculatedParams.fallingPushForce;
+        playerVelocityLimiter.pelvisMaxVelocity = levelCalculatedParams.maxVelocity;
+        playerVelocityLimiter.restMaxVelocity = levelCalculatedParams.maxVelocity;
     }
     
     // SKILLS CALCULATORS

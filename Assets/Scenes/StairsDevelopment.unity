@@ -1308,10 +1308,10 @@ MonoBehaviour:
   playerTotalDistanceTraveled: 0
   playerMaxSkills:
     level: 10
-    maxVelocity: 400
+    maxVelocity: 1000
     mpg: 0.1
-    mpt: 1
-    fallingPushForce: 500
+    mpt: 1.5
+    fallingPushForce: 600
     controlForce: 10000
     npcGasPrice: 5
     wallsSolidity: 0.01

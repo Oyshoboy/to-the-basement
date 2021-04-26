@@ -243,6 +243,7 @@ public class GameManager : MonoBehaviour
         objectLocalPositionManager.SetNewDestination(2);
         var totalTimesPlayed = PlayerPrefs.GetFloat("TimesPlayed");
         PlayerPrefs.SetFloat("TimesPlayed", totalTimesPlayed + 1);
+        arcadeManager.SetupLevelConfigurationBasedOnPlayerLevel();
     }
 
     public void MoveCameraToDefaultMode()
