@@ -22,7 +22,8 @@ public class PlayerSkills
 public class GameArcadeManager : MonoBehaviour
 {
     [Header("UI Stuff")] public TextMesh[] uiTexts;
-
+    public GameObject gameOverMenu;
+    
     [Header("Economics")]
     public int gasPerNPCCollision = 10;
     public int coinPrice = 100;
@@ -228,6 +229,7 @@ public class GameArcadeManager : MonoBehaviour
         {
             isGameOver = true;
             Debug.Log("GAME OVER");
+            gameOverMenu.SetActive(true);
         }
     }
 

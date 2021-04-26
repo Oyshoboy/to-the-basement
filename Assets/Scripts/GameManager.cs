@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Common config")] [SerializeField]
     private Vector3 sceneDefaultPosition;
-
+    public GameObject pressSpaceButton;
     public GameArcadeManager arcadeManager;
 
     public enum GameState
@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Scene preparations")] [SerializeField]
     private Rigidbody[] objectsToDisableKinematics;
+    public string sceneToLoadName;
 
     private void Start()
     {
@@ -125,23 +126,48 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R) && !isRestartRequested)
         {
-            if (gameState == GameState.Falling)
-            {
-                objectLocalPositionManager.ToggleUiHide();
-            }
-
-            isRestartRequested = true;
-            doTweenAnimation.DOPlayBackwards();
+            RestartLevelToggle();
         }
+    }
+
+    public void RestartLevelToggle()
+    {
+        if (gameState == GameState.Falling)
+        {
+            objectLocalPositionManager.ToggleUiHide();
+        }
+
+        isRestartRequested = true;
+        doTweenAnimation.DOPlayBackwards();
     }
 
     public void RestartLevel()
     {
         if (isRestartRequested)
         {
-            Scene scene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(scene.name);
+            if (sceneToLoadName != "" && sceneToLoadName != null)
+            {
+                SceneManager.LoadScene(sceneToLoadName);
+            }
+            else
+            {
+                Scene scene = SceneManager.GetActiveScene();
+                SceneManager.LoadScene(scene.name);   
+            }
         }
+    }
+    
+    public void SwitchScenes(string sceneName)
+    {
+        Debug.Log("Scene switch asked");
+        if (gameState == GameState.Falling)
+        {
+            objectLocalPositionManager.ToggleUiHide();
+        }
+
+        isRestartRequested = true;
+        sceneToLoadName = sceneName;
+        doTweenAnimation.DOPlayBackwards();
     }
 
     private void CharacterAirControll()
@@ -263,6 +289,15 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown("space"))
             {
                 MoveCameraToDefaultMode();
+            }
+        } else if (gameState == GameState.Start && !objectLocalPositionManager.isCurrentlyMoving)
+        {
+            if (Input.GetKeyDown("space"))
+            {
+                if (pressSpaceButton)
+                {
+                    pressSpaceButton.SetActive(false);
+                }
             }
         }
     }
