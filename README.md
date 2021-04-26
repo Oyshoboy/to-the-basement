@@ -9,6 +9,7 @@ Dog is asking for food. Need to bring it from the basement. It's deep, but it's 
 <b>WASD</b> - aeral move<br>
 <b>R</b> - reload level<br>
 <b>P</b> - reset statistics & score<br>
+<b>Y</b> - toggle prototype scene<br> 
 <br>
 <b>Play Online</b>: https://oyshoboy.itch.io/deep-way-to-basement <br>
 <b>Ludum Dare 48</b> Page: https://ldjam.com/events/ludum-dare/48/deep-way-to-basement <br>
