@@ -36,7 +36,18 @@ public class PlayerStatsController : MonoBehaviour
     statsTextes[1].text = $"Lv. {currentLevel + 1}/{maxLevel}";
     
     var maxDistanceTraveled = PlayerPrefs.GetFloat("MaxDistanceTraveled");
-    statsTextes[2].text = $"Record {arcadeManager.FloatToThreeDigitText(maxDistanceTraveled)}m";
+    statsTextes[2].text = $"Max Depth {arcadeManager.FloatToThreeDigitText(maxDistanceTraveled)}m";
+  }
+
+  public void ResetAllScores()
+  {
+    PlayerPrefs.SetFloat("TotalEarned", 0);
+
+    PlayerPrefs.SetFloat("NpcTotalCollided", 0);
+
+    PlayerPrefs.SetFloat("MaxDistanceTraveled", 0);
+
+    PlayerPrefs.SetFloat("PlayerSkillLevel", 0);
   }
 
   public void LevelUp()
@@ -51,6 +62,14 @@ public class PlayerStatsController : MonoBehaviour
         arcadeManager.soundController.PlayLevelupSound();
         levelUpParticles.Play();
       }
+    }
+  }
+
+  private void Update()
+  {
+    if (Input.GetKeyDown(KeyCode.P) && (arcadeManager.gameManager.gameState == GameManager.GameState.Beginning || arcadeManager.gameManager.gameState == GameManager.GameState.Start))
+    {
+      ResetAllScores();
     }
   }
 

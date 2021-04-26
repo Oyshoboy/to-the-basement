@@ -11,6 +11,7 @@ public class PlayerBonusCollector : MonoBehaviour
     public int npcCollided = 0;
     public Transform playerHips;
     public SoundController soundController;
+    public float hatchCollisionVolumeModificator = 1f;
     
     private void IncreaseMoney()
     {
@@ -45,7 +46,7 @@ public class PlayerBonusCollector : MonoBehaviour
     {
         if (other.name == "HatchCollider")
         {
-            soundController.PlayHatchCollisionSound();
+            soundController.PlayHatchCollisionSound(hatchCollisionVolumeModificator);
         }
         
         if (other.name == "Floater")

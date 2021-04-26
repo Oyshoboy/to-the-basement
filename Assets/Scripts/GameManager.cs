@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         Beginning,
         Start,
         Falling,
+        ToTheDepth,
         End
     };
 
@@ -253,6 +254,7 @@ public class GameManager : MonoBehaviour
 
     public void MoveCameraToFallingMode()
     {
+        gameState = GameState.ToTheDepth;
         currentPlayerAnimator.SetTrigger("Falling");
         isSceneFollowingPlayerHeightRightNow = true;
         objectLocalPositionManager.SetNewDestination(1);

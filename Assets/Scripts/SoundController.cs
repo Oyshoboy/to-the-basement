@@ -31,17 +31,18 @@ public class SoundController : MonoBehaviour
 
     public float fxFragmentsDelay = 0.1f;
     public GameArcadeManager arcadeManager;
+    public float velocitySoundModificator = 2f;
     
     private void Start()
     {
         windDefaultVolume = fxWindSource.volume;
     }
 
-    public void PlayHatchCollisionSound()
+    public void PlayHatchCollisionSound(float volumeModificator)
     {
         fxSoundsSource.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
         var randomCollisionSound = fxHatchCollisions[UnityEngine.Random.Range(0, fxHatchCollisions.Length)];
-        fxSoundsSource.PlayOneShot(randomCollisionSound);
+        fxSoundsSource.PlayOneShot(randomCollisionSound, volumeModificator);
     }
 
     public void PlayCoinCollectionSound()
@@ -93,7 +94,7 @@ public class SoundController : MonoBehaviour
 
     public void WindSoundController()
     {
-        velocityRatio = arcadeManager.gameManager.playerVelocityLimiter.currentVelocity / ( arcadeManager.levelCalculatedParams.maxVelocity / 2 );
+        velocityRatio = arcadeManager.gameManager.playerVelocityLimiter.currentVelocity / ( arcadeManager.levelCalculatedParams.maxVelocity / velocitySoundModificator );
         velocityRatio = velocityRatio >= 1f ? 1f : velocityRatio;
         velocityRatio = velocityRatio <= 0.05f ? 0.05f : velocityRatio;
 

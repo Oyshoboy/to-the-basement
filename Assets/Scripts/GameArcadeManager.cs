@@ -153,6 +153,7 @@ public class GameArcadeManager : MonoBehaviour
 
     private void UIDynamicUpdate()
     {
+        if(uiTexts.Length < 1) return;
         uiTexts[0].text = $"x {FloatToThreeDigitText (bonusCollector.moneyCollected * coinPrice )}";
         uiTexts[1].text = $"{FloatToThreeDigitText (playerVelocityLimiter.currentVelocity)}km/h";
         uiTexts[2].text = $"x {FloatToThreeDigitText (bonusCollector.npcCollided)}";
@@ -229,7 +230,7 @@ public class GameArcadeManager : MonoBehaviour
         if (playerGas < 0.05f && playerVelocityLimiter.currentVelocity < 1f && !isGameOver)
         {
             isGameOver = true;
-            
+            if(!gameOverMenu) return;       
             Debug.Log("GAME OVER");
             soundController.PlayGameOverSound();
             gameOverMenu.SetActive(true);

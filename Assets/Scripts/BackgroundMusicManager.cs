@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BackgroundMusicManager : MonoBehaviour
 {
     private static BackgroundMusicManager backgroundMusicManagerInstance;
     public AudioSource backGroundMusicSource;
     public AudioClip[] backgroundMusicSamples;
+    public float[] backgroundMusicVolumes;
     public int currentClipIndexPlaying = 0;
     public GameManager gameManager;
     public float transitionTime = 1f;
@@ -18,6 +20,7 @@ public class BackgroundMusicManager : MonoBehaviour
     public float[] musicStatePitches;
     private bool isSoundFadingOut = false;
     private float velocityRatio = 0f;
+    public bool isSceneSwitched = false;
 
     public enum SoundTransitionType
     {
@@ -47,6 +50,7 @@ public class BackgroundMusicManager : MonoBehaviour
         backGroundMusicSource.Play();
         musicDefaultVolume = backGroundMusicSource.volume;
         musicDefaultPitch = backGroundMusicSource.pitch;
+        backGroundMusicSource.volume = musicDefaultVolume * backgroundMusicVolumes[0];
     }
 
     private void MusicStateController()
@@ -54,8 +58,17 @@ public class BackgroundMusicManager : MonoBehaviour
         if (gameManager)
         {
             if(!gameManager.arcadeManager) return;
-            
-            if (gameManager.arcadeManager.isGameOver)
+
+            if (isSceneSwitched)
+            {
+                if (currentClipIndexPlaying != 3 && gameManager.gameState != GameManager.GameState.ToTheDepth)
+                {
+                    RequestNextClip(3);
+                } else if (currentClipIndexPlaying == 3 && gameManager.gameState == GameManager.GameState.ToTheDepth)
+                {
+                    RequestNextClip(4);
+                }
+            } else if (gameManager.arcadeManager.isGameOver)
             {
                 if (currentClipIndexPlaying == 1)
                 {
@@ -104,7 +117,7 @@ public class BackgroundMusicManager : MonoBehaviour
         var percent = transitionElapsedTime / transitionTime;
         transitionElapsedTime += Time.deltaTime / transitionTime;
         var smoothStep = Mathf.SmoothStep(0, 1, percent);
-        backGroundMusicSource.volume = Mathf.Lerp(0, musicDefaultVolume, smoothStep);
+        backGroundMusicSource.volume = Mathf.Lerp(0, musicDefaultVolume * backgroundMusicVolumes[currentClipIndexPlaying], smoothStep);
     }
 
     private void SwitchClipAndResetTransitionElapsedTime()
@@ -135,7 +148,9 @@ public class BackgroundMusicManager : MonoBehaviour
             } else
             {
                 isSoundFadingOut = true;
+                Debug.Log("Silence");
                 SwitchClipAndResetTransitionElapsedTime();
+                //backGroundMusicSource.volume = musicDefaultVolume * backgroundMusicVolumes[currentClipIndexPlaying];
             }
         }
     }
@@ -161,6 +176,15 @@ public class BackgroundMusicManager : MonoBehaviour
     private void Update()
     {
         MusicStateController();
+
+        if (SceneManager.GetActiveScene().name == "Development")
+        {
+            isSceneSwitched = true;
+        }
+        else
+        {
+            isSceneSwitched = false;
+        }
         
         if (switchType == SoundTransitionType.Switch)
         {
