@@ -48,8 +48,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public GameObject playerObject;
 
-    [Header("Player Config")] [SerializeField]
-    private PlayerVelocityLimiter playerVelocityLimiter;
+    [Header("Player Config")]
+    public PlayerVelocityLimiter playerVelocityLimiter;
 
     public Animator currentPlayerAnimator;
     public float playerMovementSpeed = 10f;
@@ -197,14 +197,12 @@ public class GameManager : MonoBehaviour
             }
             else if (gameControls == GameControlls.Stairs)
             {
+                var hVectorNormalized = h < 0 ? h / 2 : h;
                 var pushForceHelper = fallingHelperPushForce * arcadeManager.gameSkillOverallModif;
                 var movementSpeedHelper = playerMovementSpeed * arcadeManager.gameSkillOverallModif;
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                    transform.right * (pushForceHelper * Time.deltaTime * 1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                    transform.up * (pushForceHelper / 4 * Time.deltaTime * -1));
-                playerVelocityLimiter.pelvisVelocitySampler.AddForce(
-                    transform.forward * (movementSpeedHelper * Time.deltaTime * v));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.right * (pushForceHelper * Time.deltaTime * hVectorNormalized));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.up * (pushForceHelper / 4 * Time.deltaTime * -1));
+                playerVelocityLimiter.pelvisVelocitySampler.AddForce(transform.forward * (movementSpeedHelper * Time.deltaTime * v));
             }
         }
     }

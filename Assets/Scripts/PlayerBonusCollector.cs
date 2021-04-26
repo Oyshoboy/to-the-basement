@@ -10,7 +10,8 @@ public class PlayerBonusCollector : MonoBehaviour
     public int moneyCollected = 0;
     public int npcCollided = 0;
     public Transform playerHips;
-
+    public SoundController soundController;
+    
     private void IncreaseMoney()
     {
         var prevMoneySaved = PlayerPrefs.GetFloat("TotalEarned");
@@ -42,12 +43,19 @@ public class PlayerBonusCollector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.name == "HatchCollider")
+        {
+            soundController.PlayHatchCollisionSound();
+        }
+        
         if (other.name == "Floater")
         {
+            other.gameObject.layer = 17;
             var otherEffectHandler = other.transform.parent.GetComponent<BonusEffectHandler>();
             otherEffectHandler.bonusParticles.SetActive(false);
             IncreaseMoney();
             otherEffectHandler.pickupParticles.SetActive(true);
+            soundController.PlayCoinCollectionSound();
         }
 
         if (other.name == "Player_Nepic")
@@ -55,6 +63,7 @@ public class PlayerBonusCollector : MonoBehaviour
             other.gameObject.layer = 17;
             IncreaseNpcCollisions();
             gameArcadeManager.AddGase();
+            soundController.PlayNPCCollisionSOundSimple();
         }
     }
 

@@ -53,6 +53,7 @@ public class GameArcadeManager : MonoBehaviour
     public bool isPlayerDead = false;
     public bool isGameOver = false;
     public bool resetPlayerLevelSkill = false;
+    public SoundController soundController;
     
     //SYSTEM VARIABLES
     [SerializeField] private Vector3 playerStartPosition;
@@ -212,23 +213,25 @@ public class GameArcadeManager : MonoBehaviour
             gameManager.fallingHelperPushForce = 0;
         }
 
-        if (playerVelocityLimiter.pelvisMaxVelocity <= 10f)
+        if (playerVelocityLimiter.pelvisMaxVelocity <= 5f)
         {
-            playerVelocityLimiter.pelvisMaxVelocity = 10f;
+            playerVelocityLimiter.pelvisMaxVelocity = 5f;
         }
         
-        if (playerVelocityLimiter.restMaxVelocity <= 10f)
+        if (playerVelocityLimiter.restMaxVelocity <= 5f)
         {
-            playerVelocityLimiter.restMaxVelocity = 10f;
+            playerVelocityLimiter.restMaxVelocity = 5f;
         }
     }
 
     private void GameOverController()
     {
-        if (playerGas < 0.05f && playerVelocityLimiter.currentVelocity < 0.5f && !isGameOver)
+        if (playerGas < 0.05f && playerVelocityLimiter.currentVelocity < 1f && !isGameOver)
         {
             isGameOver = true;
+            
             Debug.Log("GAME OVER");
+            soundController.PlayGameOverSound();
             gameOverMenu.SetActive(true);
         }
     }

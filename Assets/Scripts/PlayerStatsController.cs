@@ -48,6 +48,7 @@ public class PlayerStatsController : MonoBehaviour
         PlayerPrefs.SetFloat("TotalEarned", totalEarned - levelUpPrice);
         PlayerPrefs.SetFloat("PlayerSkillLevel", currentLevel + 1);
         Debug.Log("LEVEL UPPING!");
+        arcadeManager.soundController.PlayLevelupSound();
         levelUpParticles.Play();
       }
     }

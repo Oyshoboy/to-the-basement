@@ -9077,13 +9077,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91cbafb232d951e41bf1e45b98a5c55d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wightModificator: 1
   pelvisVelocitySampler: {fileID: 4456866357831385309}
-  velocitySmoother: 0.95
-  pelvisMaxVelocity: 100
+  velocitySmoother: 0.93
+  pelvisMaxVelocity: 35
   currentVelocity: 0
   rigidbodies: []
-  restVelocitySmoother: 0.95
-  restMaxVelocity: 100
+  restVelocitySmoother: 0.93
+  restMaxVelocity: 35
   playerRagdoll: {fileID: 4456866357312449410}
 --- !u!114 &4456866357437101271
 MonoBehaviour:
@@ -9226,6 +9227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusParticles: {fileID: 0}
   pickupParticles: {fileID: 3685915824295908054}
+  gameManager: {fileID: 0}
 --- !u!1 &4456866357439911431
 GameObject:
   m_ObjectHideFlags: 0
