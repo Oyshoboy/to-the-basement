@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using RootMotion.Dynamics;
-using UnityEditor.Build.Player;
 using UnityEngine;
-using UnityEngine.UI;
 
 [System.Serializable]
 public class PlayerSkills
