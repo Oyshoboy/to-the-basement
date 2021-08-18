@@ -15,7 +15,7 @@ Dog is asking for food. Need to bring it from the basement. It's deep, but it's 
 <b>Ludum Dare 48</b> Page: https://ldjam.com/events/ludum-dare/48/deep-way-to-basement <br>
 
 ## Assets Used:
-<b>All assets are ignored from Git, download assets, to propperly launch project.</b>
+<b>All assets are ignored from Git, download assets to propperly launch project.</b>
 <b>Some assets are coud be left in project. Not for commercial use.</b>
 - Rayfire: [link](https://assetstore.unity.com/packages/tools/game-toolkits/rayfire-for-unity-148690)
 - Advanced People Pack 2: [link](https://assetstore.unity.com/packages/3d/characters/humanoids/humans/advanced-people-pack-2-170756)
